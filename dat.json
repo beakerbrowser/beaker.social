@@ -1,0 +1,5 @@
+{
+  "title": "Beaker.social",
+  "description": "An open social network",
+  "fallback_page": "/index.html"
+}

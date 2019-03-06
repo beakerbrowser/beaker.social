@@ -1,0 +1,6 @@
+@import "/vendor/beaker-app-stdlib/css/common.css";
+@import "/vendor/beaker-app-stdlib/css/fontawesome.css";
+
+body {
+  font-size: 13px;
+}
