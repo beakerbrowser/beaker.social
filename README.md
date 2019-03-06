@@ -18,9 +18,3 @@ You can think of it as a souped-up RSS: users publish records as files on their 
 [Fritter](https://github.com/beakerbrowser/fritter) was a proof-of-concept social network that we built on Beaker. This app uses the same principles but fixes some of the issues that we had with Fritter.
 
 One of the biggest differences is that Beaker now provides high-level Web APIs using the [unwalled.garden open standards](https://github.com/beakerbrowser/unwalled.garden). This improves performance, makes it easier to share data between apps, and makes building new apps easier.
-
-<style>
-  img {
-    width: 372px;
-  }
-</style>
