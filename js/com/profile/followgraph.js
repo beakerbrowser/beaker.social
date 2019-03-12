@@ -51,7 +51,9 @@ class ProfileFollowgraph extends LitElement {
       `
     }
     return html`
-      ${repeat(this.profiles, profile => html`<beaker-profile-info-card .user=${profile}></beaker-profile-info-card>`)}
+      ${repeat(this.profiles, profile => html`
+        <beaker-profile-info-card .user=${profile} view-profile-base-url="/profile/"></beaker-profile-info-card>
+      `)}
     `
   }
 }
