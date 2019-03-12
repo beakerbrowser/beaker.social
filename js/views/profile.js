@@ -107,7 +107,31 @@ class AppViewProfile extends LitElement {
 
   renderLoading () {
     return html`
-      <div>todo</div>
+      <link rel="stylesheet" href="/vendor/beaker-app-stdlib/css/fontawesome.css">
+      <header>
+        <section class="cover-photo">
+          <div>
+            <profile-cover-photo></profile-cover-photo>
+          </div>
+        </section>
+        <section class="toolbar">
+          <div>
+            <a class="avatar">
+              <img src="/img/default-thumb">
+            </a>
+            <div class="spacer"></div>
+          </div>
+        </section>
+      </header>
+      <main>
+        <div>
+          <nav>
+            <profile-info is-loading></profile-info>
+            <profile-content-nav view=${this.view}></profile-content-nav>
+          </nav>
+          <article>Loading...</article>
+        </div>
+      </main>
     `
   }
 }

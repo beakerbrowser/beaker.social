@@ -5,16 +5,24 @@ import profileInfoCSS from '../../../css/com/profile/info.css.js'
 class ProfileInfo extends LitElement {
   static get properties () {
     return {
-      user: {type: Object}
+      user: {type: Object},
+      isLoading: {type: Boolean, attribute: 'is-loading'}
     }
   }
 
   constructor () {
     super()
     this.user = null
+    this.isLoading = false
   }
 
   render () {
+    if (this.isLoading) {
+      return html`
+        <link rel="stylesheet" href="/vendor/beaker-app-stdlib/css/fontawesome.css">
+        <h1 class="title">Loading...</h1>
+      `
+    }
     if (!this.user) {
       return html`<div></div>`
     }
