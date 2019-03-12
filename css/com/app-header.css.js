@@ -9,7 +9,7 @@ const cssStr = css`
   background: #fff;
   box-shadow: 0 0 5px rgba(0, 0, 0, .25);
   position: relative;
-  z-index: 1;
+  z-index: 2;
 }
 
 :host > div {
