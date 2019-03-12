@@ -6,7 +6,7 @@ class ProfileInfo extends LitElement {
   static get properties () {
     return {
       user: {type: Object},
-      isLoading: {type: Boolean, attribute: 'is-loading'}
+      customTitle: {type: String, attribute: 'custom-title'}
     }
   }
 
@@ -17,14 +17,11 @@ class ProfileInfo extends LitElement {
   }
 
   render () {
-    if (this.isLoading) {
+    if (!this.user) {
       return html`
         <link rel="stylesheet" href="/vendor/beaker-app-stdlib/css/fontawesome.css">
-        <h1 class="title">Loading...</h1>
+        <h1 class="title">${this.customTitle}</h1>
       `
-    }
-    if (!this.user) {
-      return html`<div></div>`
     }
     return html`
       <link rel="stylesheet" href="/vendor/beaker-app-stdlib/css/fontawesome.css">

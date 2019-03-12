@@ -2,6 +2,7 @@ import { LitElement, html } from '/vendor/beaker-app-stdlib/vendor/lit-element/l
 import { profiles, library } from '../tmp-beaker.js'
 import { followgraph } from '../tmp-unwalled-garden.js'
 import profileCSS from '../../css/views/profile.css.js'
+import messageCSS from '/vendor/beaker-app-stdlib/css/com/message.css.js'
 import '/vendor/beaker-app-stdlib/js/com/profile-info-card.js'
 import '../com/profile/cover-photo.js'
 import '../com/profile/info.js'
@@ -17,6 +18,7 @@ class AppViewProfile extends LitElement {
       user: {type: Object},
       profileUrl: {type: String, attribute: 'profile-url'},
       profileUser: {type: Object},
+      loadError: {type: Object},
       view: {type: String}
     }
   }
@@ -26,6 +28,7 @@ class AppViewProfile extends LitElement {
     this.user = null
     this.profileUrl = null
     this.profileUser = null
+    this.loadError = false
     this.view = window.location.hash || '#posts'
   
     window.addEventListener('hashchange', e => {
@@ -43,17 +46,24 @@ class AppViewProfile extends LitElement {
   }
 
   async load () {
+    this.loadError = false
     console.log('loading', this.profileUrl)
-    // read user data
-    var profileUser = await profiles.get(this.profileUrl)
-    var libraryInfo = await library.get(this.profileUrl)
-    profileUser.isOwner = libraryInfo.owner
-    profileUser.isSaved = libraryInfo.saved
-    profileUser.isFollowed = await followgraph.isAFollowingB(this.user.url, profileUser.url)
-    profileUser.isFollowingYou = await followgraph.isAFollowingB(profileUser.url, this.user.url)
-    this.profileUser = profileUser
-    if (this.profileUser.title) document.title = this.profileUser.title
-    console.log('profile user', this.profileUser)
+    try {
+      // read user data
+      var profileUser = await profiles.get(this.profileUrl)
+      var libraryInfo = await library.get(this.profileUrl)
+      profileUser.isOwner = libraryInfo.owner
+      profileUser.isSaved = libraryInfo.saved
+      profileUser.isFollowed = await followgraph.isAFollowingB(this.user.url, profileUser.url)
+      profileUser.isFollowingYou = await followgraph.isAFollowingB(profileUser.url, this.user.url)
+      this.profileUser = profileUser
+      if (this.profileUser.title) document.title = this.profileUser.title
+      console.log('profile user', this.profileUser)
+    } catch (e) {
+      // load failure
+      console.error('Failed to load the user', e)
+      this.loadError = e
+    }
   }
 
   render() {
@@ -119,21 +129,32 @@ class AppViewProfile extends LitElement {
             <a class="avatar">
               <img src="/img/default-thumb">
             </a>
-            <div class="spacer"></div>
           </div>
         </section>
       </header>
       <main>
         <div>
           <nav>
-            <profile-info is-loading></profile-info>
+            <profile-info custom-title="${this.loadError ? 'Error' : 'Loading...'}"></profile-info>
             <profile-content-nav view=${this.view}></profile-content-nav>
           </nav>
-          <article>Loading...</article>
+          <article>
+            ${this.loadError
+              ? html`
+                <div class="message error">
+                  <span class="icon fas fa-exclamation-triangle"></span>
+                  <div>
+                    <div class="title">Failed to load the user</div>
+                    <div class="description">${this.loadError}</div>
+                  </div>
+                </div>
+              `
+              : 'Loading...'}
+          </article>
         </div>
       </main>
     `
   }
 }
-AppViewProfile.styles = profileCSS
+AppViewProfile.styles = [messageCSS, profileCSS]
 customElements.define('app-view-profile', AppViewProfile)
