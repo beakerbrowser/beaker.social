@@ -1,5 +1,5 @@
 import { LitElement, html } from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-element.js'
-import { routerMixin, routerOutletMixin } from '/vendor/beaker-app-stdlib/vendor/lit-element-router/index.js'
+import { routerMixin } from '/vendor/beaker-app-stdlib/vendor/lit-element-router/index.js'
 import { profiles } from './tmp-beaker.js'
 import feedMainCSS from '../css/main.css.js'
 import './com/app-header.js'
@@ -81,15 +81,21 @@ class AppMain extends routerMixin(LitElement) {
       <app-header
         current-user-url="${this.user.url}"
       ></app-header>
-      <app-routes current-route=${this.route}>
-        <app-view-home route="home" .user=${this.user}></app-view-home>
-        <app-view-profile route="profile" .user=${this.user} profile-url="${this.routeParams.profileUrl || ''}"></app-view-profile>
-        <app-view-not-found route="not-found" .user=${this.user}></app-view-not-found>
-      </app-routes>
+      ${this.renderCurrentView()}
     `
+  }
+
+  renderCurrentView () {
+    switch (this.route) {
+      case 'home':
+        return html`<app-view-home .user=${this.user}></app-view-home>`
+      case 'profile':
+        return html`<app-view-profile .user=${this.user} profile-url="${this.routeParams.profileUrl || ''}"></app-view-profile>`
+      default:
+        return html`<app-view-not-found .user=${this.user}></app-view-not-found>`
+    }
   }
 }
 AppMain.styles = feedMainCSS
 
-customElements.define('app-routes', class AppRoutes extends routerOutletMixin(LitElement) {})
 customElements.define('app-main', AppMain)
