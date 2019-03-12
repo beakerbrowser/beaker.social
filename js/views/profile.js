@@ -79,7 +79,7 @@ class AppViewProfile extends LitElement {
         </section>
         <section class="toolbar">
           <div>
-            <a class="avatar" href="/profile/${encodeURIComponent(this.profileUrl.url)}">
+            <a class="avatar" href="/profile/${encodeURIComponent(this.profileUrl)}">
               <img src="${this.profileUser.url}/thumb">
             </a>
             <profile-social-metrics user-url="${this.profileUser.url}"></profile-social-metrics>
