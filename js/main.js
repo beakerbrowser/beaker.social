@@ -32,6 +32,7 @@ class AppMain extends routerMixin(LitElement) {
     super()
     this.user = null
     this.setupPromise = this.load()
+    this.routeParams = {}
   }
 
   async load () {
@@ -43,12 +44,31 @@ class AppMain extends routerMixin(LitElement) {
     await this.setupPromise
 
     var routeParams = {}
-    this.route = route
     if (route === 'profile') {
       // extract the profile url
       routeParams.profileUrl = decodeURIComponent(window.location.pathname.slice('/profile/'.length))
+      // validate the URL
+      var urlp
+      try { urlp = new URL(routeParams.profileUrl) }
+      catch (e) {
+        try { urlp = new URL(`dat://${routeParams.profileUrl}`) }
+        catch (e) {}
+      }
+      if (!urlp) {
+        route = 'not-found'
+      } else if (urlp.protocol !== 'dat:') {
+        route = 'not-found'
+      } else {
+        try {
+          urlp.hostname = await DatArchive.resolveName(urlp.hostname)
+          routeParams.profileUrl = urlp.toString()
+        } catch (e) {
+          route = 'not-found'
+        }
+      }
     }
     console.log(route, routeParams)
+    this.route = route
     this.routeParams = routeParams
   }
 

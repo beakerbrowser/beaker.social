@@ -5,12 +5,12 @@ import '/vendor/beaker-app-stdlib/js/com/profile-info-card.js'
 class AppViewNotFound extends LitElement {
   render () {
     return html`
-      <nav>
-        <beaker-profile-info-card .user=${this.user}></beaker-profile-info-card>
-      </nav>
-      <main>
-        not found (todo)
-      </main>
+      <div class="not-found">
+        <h1>404 Not Found</h1>
+        <p>
+          <a href="/">&larr; Back to home</a>
+        </p>
+      </div>
     `
   }
 }
