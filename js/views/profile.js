@@ -51,10 +51,9 @@ class AppViewProfile extends LitElement {
     console.log('loading', this.profileUrl)
     try {
       // read user data
-      var profileUser = await profiles.get(this.profileUrl)
-      var libraryInfo = await library.get(this.profileUrl)
-      profileUser.isOwner = libraryInfo.owner
-      profileUser.isSaved = libraryInfo.saved
+      var datInfo = await (new DatArchive(this.profileUrl)).getInfo()
+      var profileUser = await profiles.index(this.profileUrl)
+      profileUser.isOwner = datInfo.isOwner
       profileUser.isFollowed = await followgraph.isAFollowingB(this.user.url, profileUser.url)
       profileUser.isFollowingYou = await followgraph.isAFollowingB(profileUser.url, this.user.url)
       this.profileUser = profileUser
