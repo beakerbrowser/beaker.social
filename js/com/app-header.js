@@ -33,7 +33,7 @@ export class AppHeader extends LitElement {
         <a class="text" href="/">Home</a>
         <a @click=${this.onClickAppMenu}><span class="fas fa-th"></span></a>
         <a class="todo"><span class="fas fa-bell"></span></a>
-        <a href="/profile"><img class="profile" src="${this.currentUserUrl}/thumb"></a>
+        <a href="/profile/${encodeURIComponent(this.currentUserUrl)}"><img class="profile" src="${this.currentUserUrl}/thumb"></a>
       </div>
     `
   }

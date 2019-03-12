@@ -46,10 +46,7 @@ class AppMain extends routerMixin(LitElement) {
     this.route = route
     if (route === 'profile') {
       // extract the profile url
-      routeParams.profileUrl = window.location.pathname.slice('/profile/'.length)
-      // fallback to the current user if needed
-      try { new URL(routeParams.profileUrl) }
-      catch (e) { routeParams.profileUrl = this.user.url }
+      routeParams.profileUrl = decodeURIComponent(window.location.pathname.slice('/profile/'.length))
     }
     console.log(route, routeParams)
     this.routeParams = routeParams
