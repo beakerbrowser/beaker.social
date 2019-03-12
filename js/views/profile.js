@@ -4,6 +4,7 @@ import { followgraph } from '../tmp-unwalled-garden.js'
 import profileCSS from '../../css/views/profile.css.js'
 import messageCSS from '/vendor/beaker-app-stdlib/css/com/message.css.js'
 import '/vendor/beaker-app-stdlib/js/com/profile-info-card.js'
+import '/vendor/beaker-app-stdlib/js/com/img-fallbacks.js'
 import '../com/profile/cover-photo.js'
 import '../com/profile/info.js'
 import '../com/profile/content-nav.js'
@@ -80,7 +81,10 @@ class AppViewProfile extends LitElement {
         <section class="toolbar">
           <div>
             <a class="avatar" href="/profile/${encodeURIComponent(this.profileUrl)}">
-              <img src="${this.profileUser.url}/thumb">
+              <beaker-img-fallbacks>
+                <img slot="img1" src="${this.profileUser.url}/thumb">
+                <img slot="img2" src="/img/default-thumb">
+              </beaker-img-fallbacks>
             </a>
             <profile-social-metrics user-url="${this.profileUser.url}"></profile-social-metrics>
             <div class="spacer"></div>
