@@ -4,6 +4,7 @@ const cssStr = css`
 a {
   color: var(--color-text--muted);
   text-decoration: none;
+  margin-right: 10px;
 }
 
 a:hover {
