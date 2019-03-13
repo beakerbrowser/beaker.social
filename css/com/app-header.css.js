@@ -25,7 +25,8 @@ const cssStr = css`
 }
 
 beaker-app-header-search {
-  width: 400px;
+  --input-bg-color: #fafafa;
+  --input-border-radius: 50px;
 }
 
 a {
@@ -37,14 +38,19 @@ a {
   cursor: pointer;
 }
 
-a:hover {
-  color: var(--blue);
-}
-
 a.text {
   font-size: 14px;
   font-weight: 500;
   line-height: 16px;
+  margin-left: 36px;
+}
+
+a:first-child {
+  margin-left: 0;
+}
+
+a:hover {
+  color: var(--blue);
 }
 
 a.todo {
