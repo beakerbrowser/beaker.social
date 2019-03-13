@@ -1,7 +1,5 @@
 import {LitElement, html} from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-element.js'
 import * as toast from '/vendor/beaker-app-stdlib/js/com/toast.js'
-import * as contextMenu from '/vendor/beaker-app-stdlib/js/com/context-menu.js'
-import {writeToClipboard} from '/vendor/beaker-app-stdlib/js/clipboard.js'
 import {profiles, library} from '../../tmp-beaker.js'
 import {followgraph} from '../../tmp-unwalled-garden.js'
 import profileActionsCSS from '../../../css/com/profile/actions.css.js'
@@ -43,7 +41,9 @@ class ProfileActions extends LitElement {
       <button class="btn" @click=${this.onClickEditProfile}>
         <span class="fas fa-pencil-alt"></span> Edit your profile
       </button>
-      <button class="btn" @click=${this.onClickMenu}><span class="fas fa-cog"></span></button>
+      <a class="btn" href="${this.user.url}" target="_blank">
+        <i class="fas fa-external-link-alt"></i> Visit Website
+      </a>
     `
   }
 
@@ -62,7 +62,9 @@ class ProfileActions extends LitElement {
           <button class="btn" @click=${this.onToggleFollow}>
             <span class="fa fa-rss"></span> Follow
           </button>`}
-      <button class="btn" @click=${this.onClickMenu}><span class="fas fa-cog"></span></button>
+      <a class="btn" href="${this.user.url}" target="_blank">
+        <i class="fas fa-external-link-alt"></i> Visit Website
+      </a>
     `
   }
 
@@ -92,33 +94,9 @@ class ProfileActions extends LitElement {
     this.dispatchEvent(new Event('profile-changed'))
   }
 
-  onCopyLink () {
-    writeToClipboard(`dat://profile/${this.user.url.slice('dat://'.length)}`)
-    toast.create(`Copied URL to your clipboard`, '', 1e3)
-  }
-
   async onClickEditProfile () {
     await profiles.openProfileEditor()
     this.dispatchEvent(new Event('profile-changed'))
-  }
-
-  onClickMenu (e) {
-    e.preventDefault()
-    e.stopPropagation()
-
-    var rect = e.currentTarget.getClientRects()[0]
-    var x = rect.right
-    var y = rect.top + e.currentTarget.offsetHeight
-    var items = []
-    if (!this.isCurrentUser) {
-      if (this.user.isSaved) {
-        items.push({icon: 'fas fa-fw fa-trash', label: 'Remove from library', click: () => this.onRemoveFromLibrary()})
-      } else {
-        items.push({icon: 'fas fa-fw fa-plus', label: 'Add to library', click: () => this.onAddToLibrary()})
-      }
-    }
-    items.push({icon: 'fas fa-fw fa-link', label: 'Copy link', click: () => this.onCopyLink()})
-    contextMenu.create({x, y, right: true, withTriangle: true, roomy: true, style: 'font-size: 14px', fontAwesomeCSSUrl, items})
   }
 }
 ProfileActions.styles = profileActionsCSS
