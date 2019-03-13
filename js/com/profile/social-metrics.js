@@ -7,8 +7,7 @@ class ProfileSocialMetrics extends LitElement {
   static get properties () {
     return {
       userUrl: {type: String, attribute: 'user-url'},
-      numFollowers: {type: Number},
-      numFollows: {type: Number}
+      numFollowers: {type: Number}
     }
   }
 
@@ -16,7 +15,6 @@ class ProfileSocialMetrics extends LitElement {
     super()
     this.userUrl = null
     this.numFollowers = 0
-    this.numFollows = 0
   }
 
   attributeChangedCallback (name, oldval, newval) {
@@ -29,9 +27,7 @@ class ProfileSocialMetrics extends LitElement {
 
   async load () {
     var followers = await followgraph.listFollowers(this.userUrl)
-    var follows = await followgraph.listFollows(this.userUrl)
     this.numFollowers = followers.length
-    this.numFollows = follows.length
   }
 
   render () {
@@ -41,9 +37,6 @@ class ProfileSocialMetrics extends LitElement {
     return html`
       <a href="#followers">
         <span>${this.numFollowers}</span> known ${pluralize(this.numFollowers, 'follower')}
-      </a>
-      <a href="#follows">
-        <span>${this.numFollows}</span> ${pluralize(this.numFollows, 'follow')}
       </a>
     `
   }
