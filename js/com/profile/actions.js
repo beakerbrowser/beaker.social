@@ -41,9 +41,6 @@ class ProfileActions extends LitElement {
       <button class="btn" @click=${this.onClickEditProfile}>
         <span class="fas fa-pencil-alt"></span> Edit your profile
       </button>
-      <a class="btn" href="${this.user.url}" target="_blank">
-        <i class="fas fa-external-link-alt"></i> Visit Website
-      </a>
     `
   }
 
@@ -62,9 +59,6 @@ class ProfileActions extends LitElement {
           <button class="btn" @click=${this.onToggleFollow}>
             <span class="fa fa-rss"></span> Follow
           </button>`}
-      <a class="btn" href="${this.user.url}" target="_blank">
-        <i class="fas fa-external-link-alt"></i> Visit Website
-      </a>
     `
   }
 
