@@ -57,7 +57,7 @@ class AppViewProfile extends LitElement {
       profileUser.isFollowed = await followgraph.isAFollowingB(this.user.url, profileUser.url)
       profileUser.isFollowingYou = await followgraph.isAFollowingB(profileUser.url, this.user.url)
       this.profileUser = profileUser
-      if (this.profileUser.title) document.title = this.profileUser.title
+      document.title = `${this.profileUser.title || 'Anonymous'} | Beaker.Social`
       console.log('profile user', this.profileUser)
     } catch (e) {
       // load failure
