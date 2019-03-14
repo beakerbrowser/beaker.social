@@ -1,4 +1,5 @@
 import {LitElement, html} from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-element.js'
+import { BeakerEditProfile } from '/vendor/beaker-app-stdlib/js/com/popups/edit-profile.js'
 import * as toast from '/vendor/beaker-app-stdlib/js/com/toast.js'
 import {profiles, library} from '../../tmp-beaker.js'
 import {followgraph} from '../../tmp-unwalled-garden.js'
@@ -89,7 +90,7 @@ class ProfileActions extends LitElement {
   }
 
   async onClickEditProfile () {
-    await profiles.openProfileEditor()
+    this.user = await BeakerEditProfile.runFlow(profiles)
     this.dispatchEvent(new Event('profile-changed'))
   }
 }

@@ -61,6 +61,30 @@ header a.avatar img {
   object-fit: cover;
 }
 
+header a.avatar.is-owner:hover img {
+  filter: grayscale(100%);
+}
+
+header a.avatar .change {
+  visibility: hidden;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  top: -20px;
+  color: #fff;
+  font-size: 16px;
+  white-space: pre;
+  background: rgba(0,0,0,.75);
+  padding: 5px;
+  text-shadow: 0 1px 1px rgba(0,0,0,.9);
+  border-radius: 4px;
+}
+
+header a.avatar.is-owner:hover .change {
+  visibility: visible;
+}
+
 main {
   margin-bottom: 100px;
 }

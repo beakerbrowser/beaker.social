@@ -1,4 +1,6 @@
 import { LitElement, html } from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-element.js'
+import { classMap } from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-html/directives/class-map.js'
+import { BeakerEditThumb } from '/vendor/beaker-app-stdlib/js/com/popups/edit-thumb.js'
 import { profiles, library } from '../tmp-beaker.js'
 import { followgraph } from '../tmp-unwalled-garden.js'
 import profileCSS from '../../css/views/profile.css.js'
@@ -20,6 +22,7 @@ class AppViewProfile extends LitElement {
       profileUrl: {type: String, attribute: 'profile-url'},
       profileUser: {type: Object},
       loadError: {type: Object},
+      thumbCacheBuster: {type: Number},
       view: {type: String}
     }
   }
@@ -30,6 +33,7 @@ class AppViewProfile extends LitElement {
     this.profileUrl = null
     this.profileUser = null
     this.loadError = false
+    this.thumbCacheBuster = 0
     this.view = window.location.hash || '#posts'
   
     window.addEventListener('hashchange', e => {
@@ -66,24 +70,26 @@ class AppViewProfile extends LitElement {
     }
   }
 
-  render() {
+  render () {
     if (!this.profileUser) return this.renderLoading()
-    var isViewingCurrentUser = this.profileUser.url === this.user.url
+    const isViewingCurrentUser = this.profileUser.url === this.user.url
+    const avatarCls = classMap({avatar: true, 'is-owner': isViewingCurrentUser})
     return html`
       <link rel="stylesheet" href="/vendor/beaker-app-stdlib/css/fontawesome.css">
       <header>
         <section class="cover-photo">
           <div>
-            <profile-cover-photo src="${this.profileUser.url}/cover"></profile-cover-photo>
+            <profile-cover-photo src="${this.profileUser.url}/cover" ?is-owner=${isViewingCurrentUser}></profile-cover-photo>
           </div>
         </section>
         <section class="toolbar">
           <div>
-            <a class="avatar" href="/profile/${encodeURIComponent(this.profileUrl)}">
+            <a class="${avatarCls}" href="/profile/${encodeURIComponent(this.profileUrl)}" @click=${this.onClickAvatar}>
               <beaker-img-fallbacks>
-                <img slot="img1" src="${this.profileUser.url}/thumb">
+                <img slot="img1" src="${this.profileUser.url}/thumb?cache=${this.thumbCacheBuster}">
                 <img slot="img2" src="/img/default-thumb">
               </beaker-img-fallbacks>
+              <span class="change">Change photo</span>
             </a>
             <profile-social-metrics user-url="${this.profileUser.url}"></profile-social-metrics>
             <div class="spacer"></div>
@@ -157,6 +163,18 @@ class AppViewProfile extends LitElement {
         </div>
       </main>
     `
+  }
+
+  // events
+  // =
+
+  async onClickAvatar (e) {
+    if (this.profileUser.url === this.user.url) {
+      // viewing self, show the photo editor
+      e.preventDefault()
+      await BeakerEditThumb.runFlow(profiles)
+      this.thumbCacheBuster = Date.now()
+    }
   }
 }
 AppViewProfile.styles = [messageCSS, profileCSS]
