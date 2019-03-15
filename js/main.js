@@ -4,6 +4,7 @@ import { profiles } from './tmp-beaker.js'
 import feedMainCSS from '../css/main.css.js'
 import './com/app-header.js'
 import './views/home.js'
+import './views/discover.js'
 import './views/profile.js'
 import './views/not-found.js'
 
@@ -19,6 +20,9 @@ class AppMain extends routerMixin(LitElement) {
     return [{
       name: 'home',
       pattern: ''
+    }, {
+      name: 'discover',
+      pattern: 'discover'
     }, {
       name: 'profile',
       pattern: 'profile/(.*)'
@@ -79,6 +83,7 @@ class AppMain extends routerMixin(LitElement) {
     return html`
       <link rel="stylesheet" href="/vendor/beaker-app-stdlib/css/fontawesome.css">
       <app-header
+        route="${this.route}"
         current-user-url="${this.user.url}"
       ></app-header>
       ${this.renderCurrentView()}
@@ -89,6 +94,8 @@ class AppMain extends routerMixin(LitElement) {
     switch (this.route) {
       case 'home':
         return html`<app-view-home .user=${this.user}></app-view-home>`
+      case 'discover':
+        return html`<app-view-discover .user=${this.user}></app-view-discover>`
       case 'profile':
         return html`<app-view-profile .user=${this.user} profile-url="${this.routeParams.profileUrl || ''}"></app-view-profile>`
       default:

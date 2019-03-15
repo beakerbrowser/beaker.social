@@ -1,6 +1,7 @@
-import {LitElement, html} from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-element.js'
-import {repeat} from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-html/directives/repeat.js'
-import {followgraph} from '../../tmp-unwalled-garden.js'
+import { LitElement, html } from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-element.js'
+import { repeat } from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-html/directives/repeat.js'
+import * as toast from '/vendor/beaker-app-stdlib/js/com/toast.js'
+import { followgraph } from '../../tmp-unwalled-garden.js'
 import profileFollowgraphCSS from '../../../css/com/profile/followgraph.css.js'
 import '/vendor/beaker-app-stdlib/js/com/profile-info-card.js'
 
@@ -36,8 +37,21 @@ class ProfileFollowgraph extends LitElement {
     } else {
       this.profiles = await followgraph.listFollows(this.userUrl)
     }
+    await Promise.all(this.profiles.map(async (profile) => {
+      var [isFollowed, isFollowingYou, followers] = await Promise.all([
+        followgraph.isAFollowingB(this.userUrl, profile.url),
+        followgraph.isAFollowingB(profile.url, this.userUrl),
+        followgraph.listFollowers(profile.url, {filters: {followedBy: this.userUrl}})
+      ])
+      profile.isFollowed = isFollowed
+      profile.isFollowingYou = isFollowingYou
+      profile.followers = followers.filter(f => f.url !== this.userUrl).slice(0, 6)
+    }))
     console.log(this.profiles)
   }
+
+  // rendering
+  // =
 
   render () {
     if (!this.profiles) {
@@ -50,11 +64,36 @@ class ProfileFollowgraph extends LitElement {
         <div class="empty">This user ${this.showFollowers ? 'has no known followers' : 'is not following anybody'}.</div>
       `
     }
+    const keyFn = p => p.url + p.isFollowed // include .isFollowed to force a render on change
     return html`
-      ${repeat(this.profiles, profile => html`
-        <beaker-profile-info-card .user=${profile} view-profile-base-url="/profile/"></beaker-profile-info-card>
+      ${repeat(this.profiles, keyFn, profile => html`
+        <beaker-profile-info-card
+          .user=${profile}
+          show-controls
+          view-profile-base-url="/profile/"
+          fontawesome-src="/vendor/beaker-app-stdlib/css/fontawesome.css"
+          @follow=${this.onFollow}
+          @unfollow=${this.onUnfollow}
+        ></beaker-profile-info-card>
       `)}
     `
+  }
+
+  // events
+  // =
+
+  async onFollow (e) {
+    await followgraph.follow(e.detail.url)
+    toast.create(`Followed ${e.detail.title}`, '', 1e3)
+    this.profiles.find(f => f.url === e.detail.url).isFollowed = true
+    this.requestUpdate()
+  }
+
+  async onUnfollow (e) {
+    await followgraph.unfollow(e.detail.url)
+    toast.create(`Unfollowed ${e.detail.title}`, '', 1e3)
+    this.profiles.find(f => f.url === e.detail.url).isFollowed = false
+    await this.requestUpdate()
   }
 }
 ProfileFollowgraph.styles = profileFollowgraphCSS

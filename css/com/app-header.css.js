@@ -53,6 +53,22 @@ a:hover {
   color: var(--blue);
 }
 
+a.active {
+  position: relative;
+  color: var(--blue);
+}
+
+a.active:after {
+  content: '';
+  display: block;
+  position: absolute;
+  left: -10px;
+  bottom: -17px;
+  right: -10px;
+  height: 3px;
+  background: var(--blue);
+}
+
 a.todo {
   cursor: default;
   color: #aaa;

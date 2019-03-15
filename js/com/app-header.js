@@ -7,6 +7,7 @@ export class AppHeader extends LitElement {
   static get properties () {
     return {
       fullwidth: {type: Boolean},
+      route: {type: String},
       currentUserUrl: {type: String, attribute: 'current-user-url'},
       fontawesomeSrc: {type: String, attribute: 'fontawesome-src'}
     }
@@ -15,17 +16,17 @@ export class AppHeader extends LitElement {
   constructor () {
     super()
     this.fullwidth = false
+    this.route = ''
     this.currentUserUrl = ''
     this.fontawesomeSrc = ''
   }
 
   render() {
-    const cls = classMap({fullwidth: this.fullwidth})
     return html`
       <link rel="stylesheet" href="/vendor/beaker-app-stdlib/css/fontawesome.css">
-      <div class="${cls}">
-        <a class="text" href="/"><i class="fas fa-home"></i> Home</a>
-        <a class="text" href="/explore"><i class="fas fa-binoculars"></i> Explore</a>
+      <div class="${classMap({fullwidth: this.fullwidth})}">
+        <a class="${classMap({text: true, active: this.isHomeActive})}" href="/"><i class="fas fa-home"></i> Home</a>
+        <a class="${classMap({text: true, active: this.isDiscoverActive})}" href="/discover"><i class="fas fa-search"></i> Discover</a>
         <div class="spacer"></div>
         <beaker-app-header-search
           fontawesome-src="/vendor/beaker-app-stdlib/css/fontawesome.css"
@@ -35,6 +36,14 @@ export class AppHeader extends LitElement {
         <a href="/profile/${encodeURIComponent(this.currentUserUrl)}"><img class="profile" src="${this.currentUserUrl}/thumb"></a>
       </div>
     `
+  }
+
+  get isHomeActive () {
+    return this.route === 'home'
+  }
+
+  get isDiscoverActive () {
+    return this.route === 'discover'
   }
 }
 AppHeader.styles = appHeaderCSS
