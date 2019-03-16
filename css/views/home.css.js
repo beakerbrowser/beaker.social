@@ -12,6 +12,10 @@ nav {
   margin-right: var(--column-spacing);
 }
 
+beaker-profile-info-card {
+  margin-bottom: 20px;
+}
+
 home-feed {
   width: var(--feed-width);
 }
