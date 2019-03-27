@@ -9,27 +9,27 @@ const LOAD_LIMIT = 50
 class ProfileFeed extends LitElement {
   static get properties () {
     return {
-      userUrl: {type: String, attribute: 'user-url'},
+      profileUrl: {type: String, attribute: 'profile-url'},
       posts: {type: Array}
     }
   }
 
   constructor () {
     super()
-    this.userUrl = null
+    this.profileUrl = null
     this.posts = []
   }
 
   attributeChangedCallback (name, oldval, newval) {
     super.attributeChangedCallback(name, oldval, newval)
-    if (name === 'user-url' && newval) {
+    if (name === 'profile-url' && newval) {
       // trigger a load when we have a user url
       this.load()
     }
   }
 
   async load () {
-    this.posts = await feed.query({filters: {authors: this.userUrl}, limit: LOAD_LIMIT, reverse: true})
+    this.posts = await feed.query({filters: {authors: this.profileUrl}, limit: LOAD_LIMIT, reverse: true})
   }
 
   render () {

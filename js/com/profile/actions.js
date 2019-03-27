@@ -11,14 +11,14 @@ const fontAwesomeCSSUrl = '/vendor/beaker-app-stdlib/css/fontawesome.css'
 class ProfileActions extends LitElement {
   static get properties () {
     return {
-      user: {type: Object},
+      profileUser: {type: Object},
       isCurrentUser: {type: Boolean, attribute: 'is-current-user'}
     }
   }
 
   constructor () {
     super()
-    this.user = null
+    this.profileUser = null
     this.isCurrentUser = false
   }
 
@@ -26,7 +26,7 @@ class ProfileActions extends LitElement {
   // =
 
   render () {
-    if (!this.user) {
+    if (!this.profileUser) {
       return html`<div></div>`
     }
     if (this.isCurrentUser) {
@@ -48,9 +48,9 @@ class ProfileActions extends LitElement {
   renderOtherUser () {
     return html`
       <link rel="stylesheet" href="${fontAwesomeCSSUrl}">
-      ${this.user.isOwner ? html`<span class="this-is-you">You created this site</span>` : ''}
-      ${this.user.isFollowingYou ? html`<span class="this-is-you">Follows you</span>` : ''}
-      ${this.user.isFollowed
+      ${this.profileUser.isOwner ? html`<span class="this-is-you">You created this site</span>` : ''}
+      ${this.profileUser.isFollowingYou ? html`<span class="this-is-you">Follows you</span>` : ''}
+      ${this.profileUser.isFollowed
         ? html`
           <beaker-hoverable @click=${this.onToggleFollow}>
             <button class="btn" slot="default" style="width: 100px"><span class="fa fa-check"></span> Following</button>
@@ -67,30 +67,30 @@ class ProfileActions extends LitElement {
   //
 
   async onToggleFollow () {
-    if (this.user.isFollowed) {
-      await followgraph.unfollow(this.user.url)
-      toast.create(`Unfollowed ${this.user.title}`, '', 1e3)
+    if (this.profileUser.isFollowed) {
+      await followgraph.unfollow(this.profileUser.url)
+      toast.create(`Unfollowed ${this.profileUser.title}`, '', 1e3)
     } else {
-      await followgraph.follow(this.user.url)
-      toast.create(`Followed ${this.user.title}`, '', 1e3)
+      await followgraph.follow(this.profileUser.url)
+      toast.create(`Followed ${this.profileUser.title}`, '', 1e3)
     }
     this.dispatchEvent(new Event('profile-changed'))
   }
 
   async onAddToLibrary () {
-    await library.add(this.user.url)
-    toast.create(`Added ${this.user.title} to your library`, '', 1e3)
+    await library.add(this.profileUser.url)
+    toast.create(`Added ${this.profileUser.title} to your library`, '', 1e3)
     this.dispatchEvent(new Event('profile-changed'))
   }
 
   async onRemoveFromLibrary () {
-    await library.remove(this.user.url)
-    toast.create(`Removed ${this.user.title} from your library`, '', 1e3)
+    await library.remove(this.profileUser.url)
+    toast.create(`Removed ${this.profileUser.title} from your library`, '', 1e3)
     this.dispatchEvent(new Event('profile-changed'))
   }
 
   async onClickEditProfile () {
-    this.user = await BeakerEditProfile.runFlow(profiles)
+    this.profileUser = await BeakerEditProfile.runFlow(profiles)
     this.dispatchEvent(new Event('profile-changed'))
   }
 }

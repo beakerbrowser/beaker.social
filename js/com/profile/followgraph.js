@@ -11,6 +11,7 @@ class ProfileFollowgraph extends LitElement {
   static get properties () {
     return {
       userUrl: {type: String, attribute: 'user-url'},
+      profileUrl: {type: String, attribute: 'profile-url'},
       showFollowers: {type: Boolean, attribute: 'followers'},
       profiles: {type: Array}
     }
@@ -20,12 +21,13 @@ class ProfileFollowgraph extends LitElement {
     super()
     this.showFollowers = false
     this.userUrl = null
+    this.profileUrl = null
     this.profiles = null
   }
 
   attributeChangedCallback (name, oldval, newval) {
     super.attributeChangedCallback(name, oldval, newval)
-    if (name === 'user-url' && newval) {
+    if (name === 'profile-url' && newval) {
       // trigger a load when we have a user url
       this.load()
     }
@@ -33,21 +35,22 @@ class ProfileFollowgraph extends LitElement {
 
   async load () {
     if (this.showFollowers) {
-      this.profiles = await followgraph.listFollowers(this.userUrl)
+      this.profiles = await followgraph.listFollowers(this.profileUrl)
     } else {
-      this.profiles = await followgraph.listFollows(this.userUrl)
+      this.profiles = await followgraph.listFollows(this.profileUrl)
     }
     await Promise.all(this.profiles.map(async (profile) => {
       var [isFollowed, isFollowingYou, followers] = await Promise.all([
-        followgraph.isAFollowingB(this.userUrl, profile.url),
-        followgraph.isAFollowingB(profile.url, this.userUrl),
-        followgraph.listFollowers(profile.url, {filters: {followedBy: this.userUrl}})
+        followgraph.isAFollowingB(this.profileUrl, profile.url),
+        followgraph.isAFollowingB(profile.url, this.profileUrl),
+        followgraph.listFollowers(profile.url, {filters: {followedBy: this.profileUrl}})
       ])
+      profile.isYou = profile.url === this.userUrl
       profile.isFollowed = isFollowed
       profile.isFollowingYou = isFollowingYou
-      profile.followers = followers.filter(f => f.url !== this.userUrl).slice(0, 6)
+      profile.followers = followers.filter(f => f.url !== this.profileUrl).slice(0, 6)
     }))
-    console.log(this.profiles)
+    console.log('followgraph', this.profiles)
   }
 
   // rendering

@@ -6,32 +6,32 @@ import profileSocialMetricsCSS from '../../../css/com/profile/social-metrics.css
 class ProfileSocialMetrics extends LitElement {
   static get properties () {
     return {
-      userUrl: {type: String, attribute: 'user-url'},
+      profileUrl: {type: String, attribute: 'profile-url'},
       numFollowers: {type: Number}
     }
   }
 
   constructor () {
     super()
-    this.userUrl = null
+    this.profileUrl = null
     this.numFollowers = 0
   }
 
   attributeChangedCallback (name, oldval, newval) {
     super.attributeChangedCallback(name, oldval, newval)
-    if (name === 'user-url' && newval) {
+    if (name === 'profile-url' && newval) {
       // trigger a load when we have a user url
       this.load()
     }
   }
 
   async load () {
-    var followers = await followgraph.listFollowers(this.userUrl)
+    var followers = await followgraph.listFollowers(this.profileUrl)
     this.numFollowers = followers.length
   }
 
   render () {
-    if (!this.userUrl) {
+    if (!this.profileUrl) {
       return html`<div></div>`
     }
     return html`

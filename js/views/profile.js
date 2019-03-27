@@ -91,10 +91,10 @@ class AppViewProfile extends LitElement {
               </beaker-img-fallbacks>
               <span class="change">Change photo</span>
             </a>
-            <profile-social-metrics user-url="${this.profileUser.url}"></profile-social-metrics>
+            <profile-social-metrics profile-url="${this.profileUser.url}"></profile-social-metrics>
             <div class="spacer"></div>
             <profile-actions
-              .user=${this.profileUser}
+              .profileUser=${this.profileUser}
               ?is-current-user=${isViewingCurrentUser}
               @profile-changed=${this.load}
             ></profile-actions>
@@ -104,7 +104,7 @@ class AppViewProfile extends LitElement {
       <main>
         <div>
           <nav>
-            <profile-info .user=${this.profileUser}></profile-info>
+            <profile-info .profileUser=${this.profileUser}></profile-info>
             <profile-content-nav view=${this.view}></profile-content-nav>
           </nav>
           <article>${this.renderView()}</article>
@@ -116,11 +116,11 @@ class AppViewProfile extends LitElement {
   renderView () {
     switch (this.view) {
       case '#followers':
-        return html`<profile-followgraph followers user-url=${this.profileUser.url}></profile-followgraph>`
+        return html`<profile-followgraph followers user-url=${this.user.url} profile-url=${this.profileUser.url}></profile-followgraph>`
       case '#follows':
-        return html`<profile-followgraph follows user-url=${this.profileUser.url}></profile-followgraph>`
+        return html`<profile-followgraph follows user-url=${this.user.url} profile-url=${this.profileUser.url}></profile-followgraph>`
       default:
-        return html`<profile-feed user-url=${this.profileUser.url}></profile-feed>`
+        return html`<profile-feed profile-url=${this.profileUser.url}></profile-feed>`
     }
   }
 

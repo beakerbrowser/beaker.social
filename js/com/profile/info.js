@@ -5,19 +5,19 @@ import profileInfoCSS from '../../../css/com/profile/info.css.js'
 class ProfileInfo extends LitElement {
   static get properties () {
     return {
-      user: {type: Object},
+      profileUser: {type: Object},
       customTitle: {type: String, attribute: 'custom-title'}
     }
   }
 
   constructor () {
     super()
-    this.user = null
+    this.profileUser = null
     this.isLoading = false
   }
 
   render () {
-    if (!this.user) {
+    if (!this.profileUser) {
       return html`
         <link rel="stylesheet" href="/vendor/beaker-app-stdlib/css/fontawesome.css">
         <h1 class="title">${this.customTitle}</h1>
@@ -25,10 +25,10 @@ class ProfileInfo extends LitElement {
     }
     return html`
       <link rel="stylesheet" href="/vendor/beaker-app-stdlib/css/fontawesome.css">
-      <h1 class="title"><a href="/profile/${encodeURIComponent(this.user.url)}">${this.user.title}</a></h1>
-      <div class="domain"><a href="${this.user.url}">${toNiceDomain(this.user.url)}</a></div>
-      <div class="link"><a href="${this.user.url}" target="_blank"><span class="fas fa-external-link-alt"></span> Visit Website</a></div>
-      <div class="description">${this.user.description}</div>
+      <h1 class="title"><a href="/profile/${encodeURIComponent(this.profileUser.url)}">${this.profileUser.title}</a></h1>
+      <div class="domain"><a href="${this.profileUser.url}">${toNiceDomain(this.profileUser.url)}</a></div>
+      <div class="link"><a href="${this.profileUser.url}" target="_blank"><span class="fas fa-external-link-alt"></span> Visit Website</a></div>
+      <div class="description">${this.profileUser.description}</div>
     `
   }
 
