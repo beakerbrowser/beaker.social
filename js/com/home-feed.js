@@ -1,6 +1,6 @@
 import { LitElement, html } from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-element.js'
 import { repeat } from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-html/directives/repeat.js'
-import { feed, followgraph } from '../tmp-unwalled-garden.js'
+import { posts, graph } from '../tmp-unwalled-garden.js'
 import homeFeedCSS from '../../css/com/home-feed.css.js'
 import '/vendor/beaker-app-stdlib/js/com/feed/composer.js'
 import '/vendor/beaker-app-stdlib/js/com/feed/post.js'
@@ -37,8 +37,8 @@ class HomeFeed extends LitElement {
   }
 
   async load () {
-    this.followedUsers = (await followgraph.listFollows(this.userUrl)).map(site => site.url)
-    this.posts = await feed.query({
+    this.followedUsers = (await graph.listFollows(this.userUrl)).map(site => site.url)
+    this.posts = await posts.query({
       filters: {authors: this.feedAuthors},
       limit: LOAD_LIMIT,
       reverse: true
@@ -62,7 +62,7 @@ class HomeFeed extends LitElement {
   async onSubmitFeedComposer (e) {
     // add the new post
     try {
-      await feed.addPost({content: {body: e.detail.body}})
+      await posts.addPost({content: {body: e.detail.body}})
     } catch (e) {
       alert('Something went wrong. Please let the Beaker team know! (An error is logged in the console.)')
       console.error('Failed to add post')

@@ -3,12 +3,12 @@ import { repeat } from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-html/di
 import discoverViewCSS from '../../css/views/discover.css.js'
 import * as toast from '/vendor/beaker-app-stdlib/js/com/toast.js'
 import { profiles } from '../tmp-beaker.js'
-import { followgraph } from '../tmp-unwalled-garden.js'
+import { graph } from '../tmp-unwalled-garden.js'
 import '../com/discover/nav.js'
 import '/vendor/beaker-app-stdlib/js/com/profile-info-card.js'
 
-const HARDCODED_SUGGESTIONS = [
-  'dat://628861e5140d1490833c3f2683e132fc8c485c99a448495a813649cd4ac05556/' // pfrazee
+var HARDCODED_SUGGESTIONS = [
+  'dat://pfrazee.com/'
 ]
 
 class AppViewDiscover extends LitElement {
@@ -39,6 +39,8 @@ class AppViewDiscover extends LitElement {
       this.candidates = []
 
       // add hardcoded suggestions
+      HARDCODED_SUGGESTIONS = await Promise.all(HARDCODED_SUGGESTIONS.map(DatArchive.resolveName))
+      HARDCODED_SUGGESTIONS = HARDCODED_SUGGESTIONS.map(key => `dat://${key}/`)
       this.candidates = this.candidates.concat(HARDCODED_SUGGESTIONS)
 
       // add foafs
@@ -67,11 +69,11 @@ class AppViewDiscover extends LitElement {
       }
       if (!profile) return false
       
-      // fetch followgraph data
+      // fetch graph data
       var [isFollowed, isFollowingYou, followers] = await Promise.all([
-        followgraph.isAFollowingB(this.user.url, profile.url),
-        followgraph.isAFollowingB(profile.url, this.user.url),
-        followgraph.listFollowers(profile.url, {filters: {followedBy: this.user.url}})
+        graph.isAFollowingB(this.user.url, profile.url),
+        graph.isAFollowingB(profile.url, this.user.url),
+        graph.listFollowers(profile.url, {filters: {followedBy: this.user.url}})
       ])
       profile.isFollowed = isFollowed
       profile.isFollowingYou = isFollowingYou
@@ -134,14 +136,14 @@ class AppViewDiscover extends LitElement {
   // =
 
   async onFollow (e) {
-    await followgraph.follow(e.detail.url)
+    await graph.follow(e.detail.url)
     toast.create(`Followed ${e.detail.title}`, '', 1e3)
     this.suggestions.find(f => f.url === e.detail.url).isFollowed = true
     this.requestUpdate()
   }
 
   async onUnfollow (e) {
-    await followgraph.unfollow(e.detail.url)
+    await graph.unfollow(e.detail.url)
     toast.create(`Unfollowed ${e.detail.title}`, '', 1e3)
     this.suggestions.find(f => f.url === e.detail.url).isFollowed = false
     await this.requestUpdate()

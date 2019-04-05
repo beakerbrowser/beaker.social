@@ -1,6 +1,6 @@
 import { LitElement, html } from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-element.js'
 import { profiles } from '../tmp-beaker.js'
-import { followgraph, feed } from '../tmp-unwalled-garden.js'
+import { graph, posts } from '../tmp-unwalled-garden.js'
 import setupTasksCSS from '../../css/com/setup-tasks.css.js'
 import { BeakerEditProfile } from '/vendor/beaker-app-stdlib/js/com/popups/edit-profile.js'
 import { BeakerEditThumb } from '/vendor/beaker-app-stdlib/js/com/popups/edit-thumb.js'
@@ -36,8 +36,8 @@ class SetupTasks extends LitElement {
     var profile = await profiles.getCurrentUser()
     this.isProfileSetup = !!profile.title || !!profile.description
     this.isAvatarSet = !!localStorage.hasClickedSetAvatar
-    this.hasFollowed = (await followgraph.listFollows(profile.url, {limit: 1})).length > 0
-    this.hasPosted = (await feed.query({filters: {author: profile.url}, limit: 1})).length > 0
+    this.hasFollowed = (await graph.listFollows(profile.url, {limit: 1})).length > 0
+    this.hasPosted = (await posts.query({filters: {author: profile.url}, limit: 1})).length > 0
     // dismiss if all have been done
     if (this.numStepsCompleted === 4) {
       localStorage.isSetupTasksDismissed = 1

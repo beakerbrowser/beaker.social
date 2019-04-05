@@ -1,5 +1,5 @@
 import {LitElement, html} from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-element.js'
-import {followgraph} from '../../tmp-unwalled-garden.js'
+import {graph} from '../../tmp-unwalled-garden.js'
 import {pluralize} from '/vendor/beaker-app-stdlib/js/strings.js'
 import profileSocialMetricsCSS from '../../../css/com/profile/social-metrics.css.js'
 
@@ -26,7 +26,7 @@ class ProfileSocialMetrics extends LitElement {
   }
 
   async load () {
-    var followers = await followgraph.listFollowers(this.profileUrl)
+    var followers = await graph.listFollowers(this.profileUrl)
     this.numFollowers = followers.length
   }
 

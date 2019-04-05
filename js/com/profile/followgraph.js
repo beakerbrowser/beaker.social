@@ -1,7 +1,7 @@
 import { LitElement, html } from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-element.js'
 import { repeat } from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-html/directives/repeat.js'
 import * as toast from '/vendor/beaker-app-stdlib/js/com/toast.js'
-import { followgraph } from '../../tmp-unwalled-garden.js'
+import { graph } from '../../tmp-unwalled-garden.js'
 import profileFollowgraphCSS from '../../../css/com/profile/followgraph.css.js'
 import '/vendor/beaker-app-stdlib/js/com/profile-info-card.js'
 
@@ -35,22 +35,22 @@ class ProfileFollowgraph extends LitElement {
 
   async load () {
     if (this.showFollowers) {
-      this.profiles = await followgraph.listFollowers(this.profileUrl)
+      this.profiles = await graph.listFollowers(this.profileUrl)
     } else {
-      this.profiles = await followgraph.listFollows(this.profileUrl)
+      this.profiles = await graph.listFollows(this.profileUrl)
     }
     await Promise.all(this.profiles.map(async (profile) => {
       var [isFollowed, isFollowingYou, followers] = await Promise.all([
-        followgraph.isAFollowingB(this.profileUrl, profile.url),
-        followgraph.isAFollowingB(profile.url, this.profileUrl),
-        followgraph.listFollowers(profile.url, {filters: {followedBy: this.profileUrl}})
+        graph.isAFollowingB(this.profileUrl, profile.url),
+        graph.isAFollowingB(profile.url, this.profileUrl),
+        graph.listFollowers(profile.url, {filters: {followedBy: this.profileUrl}})
       ])
       profile.isYou = profile.url === this.userUrl
       profile.isFollowed = isFollowed
       profile.isFollowingYou = isFollowingYou
       profile.followers = followers.filter(f => f.url !== this.profileUrl).slice(0, 6)
     }))
-    console.log('followgraph', this.profiles)
+    console.log('graph', this.profiles)
   }
 
   // rendering
@@ -86,14 +86,14 @@ class ProfileFollowgraph extends LitElement {
   // =
 
   async onFollow (e) {
-    await followgraph.follow(e.detail.url)
+    await graph.follow(e.detail.url)
     toast.create(`Followed ${e.detail.title}`, '', 1e3)
     this.profiles.find(f => f.url === e.detail.url).isFollowed = true
     this.requestUpdate()
   }
 
   async onUnfollow (e) {
-    await followgraph.unfollow(e.detail.url)
+    await graph.unfollow(e.detail.url)
     toast.create(`Unfollowed ${e.detail.title}`, '', 1e3)
     this.profiles.find(f => f.url === e.detail.url).isFollowed = false
     await this.requestUpdate()
