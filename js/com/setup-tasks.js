@@ -34,10 +34,10 @@ class SetupTasks extends LitElement {
   async load () {
     // detect whether each step has been completed
     var profile = await profiles.getCurrentUser()
-    this.isProfileSetup = !!profile.title || !!profile.description
+    this.isProfileSetup = (!!profile.title && profile.title !== 'Anonymous') || !!profile.description
     this.isAvatarSet = !!localStorage.hasClickedSetAvatar
     this.hasFollowed = (await graph.listFollows(profile.url, {limit: 1})).length > 0
-    this.hasPosted = (await posts.query({filters: {author: profile.url}, limit: 1})).length > 0
+    this.hasPosted = (await posts.query({filters: {authors: profile.url}, limit: 1})).length > 0
     // dismiss if all have been done
     if (this.numStepsCompleted === 4) {
       localStorage.isSetupTasksDismissed = 1

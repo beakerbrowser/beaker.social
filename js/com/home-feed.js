@@ -22,6 +22,7 @@ class HomeFeed extends LitElement {
     this.userUrl = ''
     this.followedUsers = []
     this.posts = []
+    this.hasUserPosted = false
   }
 
   get feedAuthors () {
@@ -37,6 +38,7 @@ class HomeFeed extends LitElement {
   }
 
   async load () {
+    this.hasUserPosted = (await posts.query({filters: {authors: this.userUrl}, limit: 1})).length > 0
     this.followedUsers = (await graph.listFollows(this.userUrl)).map(site => site.url)
     this.posts = await posts.query({
       filters: {authors: this.feedAuthors},
@@ -78,8 +80,13 @@ class HomeFeed extends LitElement {
       return
     }
 
-    // reload the feed to show the new post
-    this.load()
+    if (this.hasUserPosted) {
+      // reload the feed to show the new post
+      this.load()
+    } else {
+      // reload the page (for the setup tasks)
+      location.reload()
+    }
   }
 }
 HomeFeed.styles = homeFeedCSS
