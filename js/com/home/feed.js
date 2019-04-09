@@ -1,7 +1,7 @@
 import { LitElement, html } from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-element.js'
 import { repeat } from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-html/directives/repeat.js'
-import { posts, graph } from '../tmp-unwalled-garden.js'
-import homeFeedCSS from '../../css/com/home-feed.css.js'
+import { posts, graph } from '../../tmp-unwalled-garden.js'
+import homeFeedCSS from '../../../css/com/home/feed.css.js'
 import '/vendor/beaker-app-stdlib/js/com/feed/composer.js'
 import '/vendor/beaker-app-stdlib/js/com/feed/post.js'
 

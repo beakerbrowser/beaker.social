@@ -1,7 +1,7 @@
 import { LitElement, html } from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-element.js'
 import { classMap } from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-html/directives/class-map.js'
 import { BeakerEditThumb } from '/vendor/beaker-app-stdlib/js/com/popups/edit-thumb.js'
-import { profiles, library } from '../tmp-beaker.js'
+import { profiles } from '../tmp-beaker.js'
 import { graph } from '../tmp-unwalled-garden.js'
 import profileCSS from '../../css/views/profile.css.js'
 import messageCSS from '/vendor/beaker-app-stdlib/css/com/message.css.js'
