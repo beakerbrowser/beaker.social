@@ -3,6 +3,7 @@ import { routerMixin } from '/vendor/beaker-app-stdlib/vendor/lit-element-router
 import { profiles } from './tmp-beaker.js'
 import feedMainCSS from '../css/main.css.js'
 import './com/app-header.js'
+import './com/welcome-banner.js'
 import './views/home.js'
 import './views/discover.js'
 import './views/profile.js'
@@ -86,6 +87,7 @@ class AppMain extends routerMixin(LitElement) {
         route="${this.route}"
         current-user-url="${this.user.url}"
       ></app-header>
+      <welcome-banner></welcome-banner>
       ${this.renderCurrentView()}
     `
   }
