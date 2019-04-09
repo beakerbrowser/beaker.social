@@ -3,7 +3,7 @@ import {css} from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-element.js'
 const cssStr = css`
 :host {
   --ui-width: 960px;
-  --left-column-width: 280px;
+  --left-column-width: 260px;
   --feed-width: 560px;
   --column-spacing: 15px;
   --header-height: 50px;
