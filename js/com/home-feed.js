@@ -51,8 +51,16 @@ class HomeFeed extends LitElement {
 
   render () {
     return html`
+      <link rel="stylesheet" href="/vendor/beaker-app-stdlib/css/fontawesome.css">
       <beaker-feed-composer @submit=${this.onSubmitFeedComposer}></beaker-feed-composer>
       ${repeat(this.posts, post => html`<beaker-feed-post .post=${post} view-profile-base-url="/profile/"></beaker-feed-post>`)}
+      ${this.posts.length === 0
+        ? html`
+          <div class="empty">
+            <div><span class="fas fa-image"></span></div>
+            <div>This is your home feed. It will show posts from people you follow.</div>
+          </div>
+        ` : ''}
     `
   }
 
