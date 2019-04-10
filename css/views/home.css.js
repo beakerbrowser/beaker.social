@@ -12,7 +12,7 @@ nav {
   margin-right: var(--column-spacing);
 }
 
-beaker-profile-info-card {
+home-user-card {
   margin-bottom: 20px;
 }
 
