@@ -67,7 +67,7 @@ h2 {
   min-height: 200px;
 }
 
-.empty .fas {
+.empty .far {
   font-size: 85px;
   margin-bottom: 30px;
   color: #ccc;

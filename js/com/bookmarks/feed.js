@@ -53,8 +53,8 @@ class BookmarksFeed extends LitElement {
       ${this.bookmarks.length === 0
         ? html`
           <div class="empty">
-            <div><span class="fas fa-image"></span></div>
-            <div>This is your home feed. It will show posts from people you follow.</div>
+            <div><span class="far fa-star"></span></div>
+            <div>This is the bookmarks feed. It will show public bookmarks from people you follow.</div>
           </div>
         ` : ''}
     `
