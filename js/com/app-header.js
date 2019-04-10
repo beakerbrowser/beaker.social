@@ -26,6 +26,7 @@ export class AppHeader extends LitElement {
       <link rel="stylesheet" href="/vendor/beaker-app-stdlib/css/fontawesome.css">
       <div class="${classMap({fullwidth: this.fullwidth})}">
         <a class="${classMap({text: true, active: this.isHomeActive})}" href="/"><i class="fas fa-home"></i> Home</a>
+        <a class="${classMap({text: true, active: this.isBookmarksActive})}" href="/bookmarks"><i class="far fa-star"></i> Bookmarks</a>
         <a class="${classMap({text: true, active: this.isDiscoverActive})}" href="/discover"><i class="fas fa-search"></i> Discover</a>
         <div class="spacer"></div>
         <beaker-app-header-search
@@ -40,6 +41,10 @@ export class AppHeader extends LitElement {
 
   get isHomeActive () {
     return this.route === 'home'
+  }
+
+  get isBookmarksActive () {
+    return this.route === 'bookmarks'
   }
 
   get isDiscoverActive () {

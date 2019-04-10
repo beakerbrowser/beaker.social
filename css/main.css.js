@@ -5,6 +5,7 @@ const cssStr = css`
   --ui-width: 960px;
   --left-column-width: 260px;
   --feed-width: 560px;
+  --bookmarks-width: 700px;
   --column-spacing: 15px;
   --header-height: 50px;
 }

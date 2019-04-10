@@ -5,6 +5,7 @@ import feedMainCSS from '../css/main.css.js'
 import './com/app-header.js'
 import './com/welcome-banner.js'
 import './views/home.js'
+import './views/bookmarks.js'
 import './views/discover.js'
 import './views/profile.js'
 import './views/not-found.js'
@@ -18,19 +19,13 @@ class AppMain extends routerMixin(LitElement) {
   }
 
   static get routes() {
-    return [{
-      name: 'home',
-      pattern: ''
-    }, {
-      name: 'discover',
-      pattern: 'discover'
-    }, {
-      name: 'profile',
-      pattern: 'profile/(.*)'
-    }, {
-      name: 'not-found',
-      pattern: '*'
-    }];
+    return [
+      {name: 'home', pattern: ''},
+      {name: 'bookmarks', pattern: 'bookmarks'},
+      {name: 'discover', pattern: 'discover'},
+      {name: 'profile', pattern: 'profile/(.*)'},
+      {name: 'not-found', pattern: '*'}
+    ];
 }
 
   constructor () {
@@ -96,6 +91,8 @@ class AppMain extends routerMixin(LitElement) {
     switch (this.route) {
       case 'home':
         return html`<app-view-home .user=${this.user}></app-view-home>`
+      case 'bookmarks':
+        return html`<app-view-bookmarks .user=${this.user}></app-view-bookmarks>`
       case 'discover':
         return html`<app-view-discover .user=${this.user}></app-view-discover>`
       case 'profile':
