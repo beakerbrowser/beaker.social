@@ -1,5 +1,5 @@
 {
   "title": "Beaker.Social",
-  "description": "An open social network",
+  "description": "A distributed social network built on the unwalled.garden open standards",
   "fallback_page": "/index.html"
 }

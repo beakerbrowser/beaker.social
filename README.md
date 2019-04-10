@@ -1,6 +1,6 @@
 # Beaker.Social
 
-A social networking app built on Beaker's [unwalled.garden open standards](https://github.com/beakerbrowser/unwalled.garden).
+A distributed social networking app built on the [unwalled.garden open standards](https://github.com/beakerbrowser/unwalled.garden).
 
 ![./docs/screen1.png](./docs/screen1.png) ![./docs/screen2.png](./docs/screen2.png)
 
