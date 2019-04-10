@@ -34,12 +34,13 @@ class ProfileFollowgraph extends LitElement {
   }
 
   async load () {
+    var profiles
     if (this.showFollowers) {
-      this.profiles = await graph.listFollowers(this.profileUrl)
+      profiles = await graph.listFollowers(this.profileUrl)
     } else {
-      this.profiles = await graph.listFollows(this.profileUrl)
+      profiles = await graph.listFollows(this.profileUrl)
     }
-    await Promise.all(this.profiles.map(async (profile) => {
+    await Promise.all(profiles.map(async (profile) => {
       var [isFollowed, isFollowingYou, followers] = await Promise.all([
         graph.isAFollowingB(this.profileUrl, profile.url),
         graph.isAFollowingB(profile.url, this.profileUrl),
@@ -50,6 +51,7 @@ class ProfileFollowgraph extends LitElement {
       profile.isFollowingYou = isFollowingYou
       profile.followers = followers.filter(f => f.url !== this.profileUrl).slice(0, 6)
     }))
+    this.profiles = profiles
     console.log('graph', this.profiles)
   }
 
