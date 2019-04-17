@@ -9,6 +9,7 @@ const LOAD_LIMIT = 50
 class ProfileFeed extends LitElement {
   static get properties () {
     return {
+      userUrl: {type: String, attribute: 'user-url'},
       profileUrl: {type: String, attribute: 'profile-url'},
       posts: {type: Array}
     }

@@ -120,7 +120,7 @@ class AppViewProfile extends LitElement {
       case '#follows':
         return html`<profile-followgraph follows user-url=${this.user.url} profile-url=${this.profileUser.url}></profile-followgraph>`
       default:
-        return html`<profile-feed profile-url=${this.profileUser.url}></profile-feed>`
+        return html`<profile-feed user-url=${this.user.url} profile-url=${this.profileUser.url}></profile-feed>`
     }
   }
 
