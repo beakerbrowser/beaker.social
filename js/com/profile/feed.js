@@ -39,7 +39,7 @@ class ProfileFeed extends LitElement {
       `
     }
     return html`
-      ${repeat(this.posts, post => html`<beaker-feed-post .post=${post} view-profile-base-url="/profile/"></beaker-feed-post>`)}
+      ${repeat(this.posts, post => html`<beaker-feed-post .post=${post} user-url="${this.userUrl}" view-profile-base-url="/profile/"></beaker-feed-post>`)}
     `
   }
 }

@@ -1,6 +1,8 @@
 import { LitElement, html } from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-element.js'
 import { routerMixin } from '/vendor/beaker-app-stdlib/vendor/lit-element-router/index.js'
+import * as toast from '/vendor/beaker-app-stdlib/js/com/toast.js'
 import { profiles } from './tmp-beaker.js'
+import { reactions } from './tmp-unwalled-garden.js'
 import feedMainCSS from '../css/main.css.js'
 import './com/app-header.js'
 import './com/welcome-banner.js'
@@ -83,7 +85,9 @@ class AppMain extends routerMixin(LitElement) {
         current-user-url="${this.user.url}"
       ></app-header>
       <welcome-banner></welcome-banner>
-      ${this.renderCurrentView()}
+      <div class="view-wrapper" @add-reaction=${this.addReaction} @delete-reaction=${this.deleteReaction}>
+        ${this.renderCurrentView()}
+      </div>
     `
   }
 
@@ -99,6 +103,27 @@ class AppMain extends routerMixin(LitElement) {
         return html`<app-view-profile .user=${this.user} profile-url="${this.routeParams.profileUrl || ''}"></app-view-profile>`
       default:
         return html`<app-view-not-found .user=${this.user}></app-view-not-found>`
+    }
+  }
+
+  // events
+  // =
+
+  async addReaction (e) {
+    try {
+      await reactions.addReaction(e.detail.topic, e.detail.emoji)
+    } catch (e) {
+      console.error('Failed to add reaction', e)
+      toast.create('Something went wrong', 'error')
+    }
+  }
+
+  async deleteReaction (e) {
+    try {
+      await reactions.deleteReaction(e.detail.topic, e.detail.emoji)
+    } catch (e) {
+      console.error('Failed to remove reaction', e)
+      toast.create('Something went wrong', 'error')
     }
   }
 }
