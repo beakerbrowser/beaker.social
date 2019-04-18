@@ -1,8 +1,9 @@
 import { LitElement, html } from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-element.js'
-import { repeat } from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-html/directives/repeat.js'
 import bookmarksViewCSS from '../../css/views/bookmarks.css.js'
 import '../com/bookmarks/feed.js'
 import '../com/bookmarks/tags.js'
+import '../com/app-user-card.js'
+import '../com/app-content-nav.js'
 
 class AppViewBookmarks extends LitElement {
   static get properties () {
@@ -27,6 +28,10 @@ class AppViewBookmarks extends LitElement {
 
   render () {
     return html`
+      <nav>
+        <app-user-card .user=${this.user}></app-user-card>
+        <app-content-nav route="bookmarks"></app-content-nav>
+      </nav>
       <main>
         <bookmarks-feed .user=${this.user}></bookmarks-feed>
       </main>

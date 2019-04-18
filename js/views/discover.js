@@ -4,7 +4,8 @@ import discoverViewCSS from '../../css/views/discover.css.js'
 import * as toast from '/vendor/beaker-app-stdlib/js/com/toast.js'
 import { profiles } from '../tmp-beaker.js'
 import { graph } from '../tmp-unwalled-garden.js'
-import '../com/discover/nav.js'
+import '../com/app-user-card.js'
+import '../com/app-content-nav.js'
 import '/vendor/beaker-app-stdlib/js/com/profile-info-card.js'
 
 var HARDCODED_SUGGESTIONS = [
@@ -92,7 +93,8 @@ class AppViewDiscover extends LitElement {
   render () {
     return html`
       <nav>
-        <app-discover-nav></app-discover-nav>
+        <app-user-card .user=${this.user}></app-user-card>
+        <app-content-nav route="discover"></app-content-nav>
       </nav>
       <main>
         ${this.renderSuggestions()}
@@ -117,6 +119,7 @@ class AppViewDiscover extends LitElement {
     }
     const keyFn = user => user.url + user.isFollowed // include .isFollowed to force a render on change
     return html`
+      <h2>Suggested follows</h2>
       <div class="suggestions">
         ${repeat(this.suggestions, keyFn, user => html`
           <beaker-profile-info-card

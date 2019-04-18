@@ -12,12 +12,17 @@ nav {
   margin-right: var(--column-spacing);
 }
 
-home-user-card {
+app-user-card {
   margin-bottom: 20px;
+  border-radius: 4px;
+  overflow: hidden;
+  border-color: var(--border-color);
 }
 
 home-feed {
-  width: var(--feed-width);
+  width: var(--posts-width);
+  border-radius: 4px;
+  overflow: hidden;
 }
 `
 export default cssStr

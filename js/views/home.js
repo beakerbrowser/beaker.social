@@ -1,15 +1,17 @@
 import {LitElement, html} from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-element.js'
 import homeViewCSS from '../../css/views/home.css.js'
-import '../com/home/user-card.js'
 import '../com/home/feed.js'
+import '../com/app-user-card.js'
+import '../com/app-content-nav.js'
 import '../com/setup-tasks.js'
 
 class AppViewHome extends LitElement {
   render () {
     return html`
       <nav>
-        <home-user-card .user=${this.user}></home-user-card>
+        <app-user-card .user=${this.user}></app-user-card>
         <setup-tasks></setup-tasks>
+        <app-content-nav route="home"></app-content-nav>
       </nav>
       <main>
         <home-feed user-url=${this.user ? this.user.url : ''}></home-feed>

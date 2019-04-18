@@ -84,6 +84,7 @@ class AppMain extends routerMixin(LitElement) {
         route="${this.route}"
         current-user-url="${this.user.url}"
       ></app-header>
+
       <welcome-banner></welcome-banner>
       <div class="view-wrapper" @add-reaction=${this.addReaction} @delete-reaction=${this.deleteReaction}>
         ${this.renderCurrentView()}

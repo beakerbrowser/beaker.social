@@ -25,8 +25,9 @@ const cssStr = css`
 }
 
 beaker-app-header-search {
-  --input-bg-color: #fafafa;
+  --input-bg-color: #fcfcfd;
   --input-border-radius: 50px;
+  margin-left: 26px;
 }
 
 a {
