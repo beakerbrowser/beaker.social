@@ -12,7 +12,6 @@ beaker-feed-post {
   margin-bottom: 8px;
 }
 
-
 .empty {
   background: #fff;
   padding: 24px;

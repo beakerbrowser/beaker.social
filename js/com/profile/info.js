@@ -23,10 +23,11 @@ class ProfileInfo extends LitElement {
         <h1 class="title">${this.customTitle}</h1>
       `
     }
+    let url = `/profile/${encodeURIComponent(this.profileUser.url)}`
     return html`
       <link rel="stylesheet" href="/vendor/beaker-app-stdlib/css/fontawesome.css">
-      <h1 class="title"><a href="/profile/${encodeURIComponent(this.profileUser.url)}">${this.profileUser.title}</a></h1>
-      <div class="domain"><a href="${this.profileUser.url}">${toNiceDomain(this.profileUser.url)}</a></div>
+      <h1 class="title"><a href="${url}">${this.profileUser.title}</a></h1>
+      <div class="domain"><a href="${url}">${toNiceDomain(this.profileUser.url)}</a></div>
       <div class="link"><a href="${this.profileUser.url}" target="_blank"><span class="fas fa-external-link-alt"></span> Visit Website</a></div>
       <div class="description">${this.profileUser.description}</div>
     `
