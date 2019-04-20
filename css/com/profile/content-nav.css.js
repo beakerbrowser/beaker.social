@@ -9,12 +9,12 @@ a {
   padding: 5px 10px;
   margin-bottom: 5px;
   font-weight: 500;
+  border-radius: 4px;
 }
 
 a.active,
 a:hover {
-  background: #fff;
-  border: 1px solid #ccc;
+  background: #ebedf1;
 }
 `
 export default cssStr
