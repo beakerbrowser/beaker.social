@@ -16,5 +16,10 @@ a.active,
 a:hover {
   background: #ebedf1;
 }
+
+a .fas,
+a .far {
+  margin-right: 5px;
+}
 `
 export default cssStr

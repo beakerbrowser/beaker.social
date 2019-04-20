@@ -1,20 +1,22 @@
 import {css} from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-element.js'
 
 const cssStr = css`
-a {
+:host {
+  display: flex;
+  align-items: center;
   color: var(--color-text--muted);
-  text-decoration: none;
-  margin-right: 10px;
 }
 
-a:hover {
-  text-decoration: underline;
+span,
+a {
+  margin-left: 6px;
 }
 
-span {
-  font-size: 21px;
-  font-weight: 500;
-  color: var(--color-text);
+img {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  object-fit: cover;
 }
 `
 export default cssStr

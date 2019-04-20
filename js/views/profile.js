@@ -12,7 +12,8 @@ import '../com/profile/info.js'
 import '../com/profile/content-nav.js'
 import '../com/profile/social-metrics.js'
 import '../com/profile/actions.js'
-import '../com/profile/feed.js'
+import '../com/profile/post-feed.js'
+import '../com/profile/bookmark-feed.js'
 import '../com/profile/followgraph.js'
 
 class AppViewProfile extends LitElement {
@@ -115,12 +116,12 @@ class AppViewProfile extends LitElement {
 
   renderView () {
     switch (this.view) {
-      case '#followers':
-        return html`<profile-followgraph followers user-url=${this.user.url} profile-url=${this.profileUser.url}></profile-followgraph>`
-      case '#follows':
+      case '#bookmarks':
+        return html`<profile-bookmark-feed user-url=${this.user.url} profile-url=${this.profileUser.url}></profile-bookmark-feed>`
+      case '#address-book':
         return html`<profile-followgraph follows user-url=${this.user.url} profile-url=${this.profileUser.url}></profile-followgraph>`
       default:
-        return html`<profile-feed user-url=${this.user.url} profile-url=${this.profileUser.url}></profile-feed>`
+        return html`<profile-post-feed user-url=${this.user.url} profile-url=${this.profileUser.url}></profile-post-feed>`
     }
   }
 

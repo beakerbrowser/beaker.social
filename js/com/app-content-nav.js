@@ -17,7 +17,7 @@ class AppContentNav extends LitElement {
   render () {
     return html`
       <link rel="stylesheet" href="/vendor/beaker-app-stdlib/css/fontawesome.css">
-      <a class="${classMap({text: true, active: this.isHomeActive})}" href="/"><i class="fas fa-fw fa-newspaper"></i> Front page</a>
+      <a class="${classMap({text: true, active: this.isHomeActive})}" href="/"><i class="far fa-fw fa-newspaper"></i> Front page</a>
       <a class="${classMap({text: true, active: this.isBookmarksActive})}" href="/bookmarks"><i class="far fa-fw fa-star"></i> Bookmarks</a>
       <a class="${classMap({text: true, active: this.isDiscoverActive})}" href="/discover"><i class="fas fa-fw fa-search"></i> Discover</a>
     `

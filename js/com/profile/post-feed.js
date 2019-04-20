@@ -1,12 +1,12 @@
 import {LitElement, html} from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-element.js'
 import {repeat} from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-html/directives/repeat.js'
 import {posts} from '../../tmp-unwalled-garden.js'
-import profileFeedCSS from '../../../css/com/profile/feed.css.js'
+import profilePostFeedCSS from '../../../css/com/profile/post-feed.css.js'
 import '/vendor/beaker-app-stdlib/js/com/feed/post.js'
 
 const LOAD_LIMIT = 50
 
-class ProfileFeed extends LitElement {
+class ProfilePostFeed extends LitElement {
   static get properties () {
     return {
       userUrl: {type: String, attribute: 'user-url'},
@@ -44,5 +44,5 @@ class ProfileFeed extends LitElement {
     `
   }
 }
-ProfileFeed.styles = profileFeedCSS
-customElements.define('profile-feed', ProfileFeed)
+ProfilePostFeed.styles = profilePostFeedCSS
+customElements.define('profile-post-feed', ProfilePostFeed)

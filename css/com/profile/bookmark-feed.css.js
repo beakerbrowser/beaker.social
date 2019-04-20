@@ -1,21 +1,8 @@
 import {css} from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-element.js'
-import buttonsCSS from '/vendor/beaker-app-stdlib/css/buttons.css.js'
 
 const cssStr = css`
-${buttonsCSS}
-
 :host {
   display: block;
-  box-sizing: border-box;
-}
-
-a:hover {
-  text-decoration: underline;
-}
-
-h2 {
-  margin-top: 0;
-  font-weight: normal;
 }
 
 .bookmarks {
@@ -34,16 +21,9 @@ beaker-feed-bookmark:last-child {
 
 .empty {
   background: #fff;
-  padding: 40px 0 0;
-  color: #8a8a8a;
+  padding: 24px;
   text-align: center;
-  min-height: 200px;
-}
-
-.empty .far {
-  font-size: 85px;
-  margin-bottom: 30px;
-  color: #ccc;
+  color: var(--color-text--muted);
 }
 `
 export default cssStr

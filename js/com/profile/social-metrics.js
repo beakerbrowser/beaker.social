@@ -1,20 +1,20 @@
-import {LitElement, html} from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-element.js'
-import {graph} from '../../tmp-unwalled-garden.js'
-import {pluralize} from '/vendor/beaker-app-stdlib/js/strings.js'
+import { LitElement, html } from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-element.js'
+import { repeat } from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-html/directives/repeat.js'
+import { graph } from '../../tmp-unwalled-garden.js'
 import profileSocialMetricsCSS from '../../../css/com/profile/social-metrics.css.js'
 
 class ProfileSocialMetrics extends LitElement {
   static get properties () {
     return {
       profileUrl: {type: String, attribute: 'profile-url'},
-      numFollowers: {type: Number}
+      followers: {type: Array}
     }
   }
 
   constructor () {
     super()
     this.profileUrl = null
-    this.numFollowers = 0
+    this.followers = []
   }
 
   attributeChangedCallback (name, oldval, newval) {
@@ -26,21 +26,31 @@ class ProfileSocialMetrics extends LitElement {
   }
 
   async load () {
-    var followers = await graph.listFollowers(this.profileUrl)
-    this.numFollowers = followers.length
+    this.followers = await graph.listFollowers(this.profileUrl)
   }
 
   render () {
     if (!this.profileUrl) {
       return html`<div></div>`
     }
+    var n = this.followers.length - 8
     return html`
-      <a href="#followers">
-        <span>${this.numFollowers}</span> known ${pluralize(this.numFollowers, 'follower')}
-      </a>
+      Followed by:
+      ${repeat(this.followers.slice(0, 8), f => f, f => this.renderUser(f))}
+      <span>
+        ${n > 0 ? `+${n} others` : ''}
+        ${this.followers.length === 0 ? 'nobody you follow': ''}
+      </span>
     `
   }
 
+  renderUser (user) {
+    return html`
+      <a href="/profile/${encodeURIComponent(user.url)}" title="${user.title || 'Anonymous'}">
+        <img src="asset:thumb:${user.url}">
+      </a>
+    `
+  }
 }
 ProfileSocialMetrics.styles = profileSocialMetricsCSS
 customElements.define('profile-social-metrics', ProfileSocialMetrics)
