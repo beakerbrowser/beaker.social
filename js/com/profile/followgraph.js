@@ -42,9 +42,9 @@ class ProfileFollowgraph extends LitElement {
     }
     await Promise.all(profiles.map(async (profile) => {
       var [isFollowed, isFollowingYou, followers] = await Promise.all([
-        graph.isAFollowingB(this.profileUrl, profile.url),
-        graph.isAFollowingB(profile.url, this.profileUrl),
-        graph.listFollowers(profile.url, {filters: {followedBy: this.profileUrl}})
+        graph.isAFollowingB(this.userUrl, profile.url),
+        graph.isAFollowingB(profile.url, this.userUrl),
+        graph.listFollowers(profile.url, {filters: {followedBy: this.userUrl}})
       ])
       profile.isYou = profile.url === this.userUrl
       profile.isFollowed = isFollowed
