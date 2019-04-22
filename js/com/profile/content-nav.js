@@ -17,9 +17,9 @@ class ProfileContentNav extends LitElement {
   render () {
     return html`
       <link rel="stylesheet" href="/vendor/beaker-app-stdlib/css/fontawesome.css">
-      ${this.renderLink('#posts', html`<i class="far fa-fw fa-newspaper"></i> Posts`)}
+      ${this.renderLink('#posts', html`<i class="fas fa-fw fa-list-ul"></i> Posts`)}
       ${this.renderLink('#bookmarks', html`<i class="far fa-fw fa-star"></i> Bookmarks`)}
-      ${this.renderLink('#address-book', html`<i class="far fa-fw fa-address-book"></i> Address book`)}
+      ${this.renderLink('#address-book', html`<i class="far fa-fw fa-address-book"></i> Social graph`)}
     `
   }
 

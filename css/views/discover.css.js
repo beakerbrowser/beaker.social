@@ -17,6 +17,11 @@ nav {
   margin-right: var(--column-spacing);
 }
 
+h2 {
+  margin-top: 0;
+  font-weight: normal;
+}
+
 app-user-card {
   margin-bottom: 20px;
   border-radius: 4px;

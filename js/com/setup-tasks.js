@@ -108,6 +108,9 @@ class SetupTasks extends LitElement {
 
   onClickPost (e) {
     e.preventDefault()
+    if (window.location.pathname !== '/') {
+      window.location = '/'
+    }
     emit(document, 'focus-composer')
   }
 }

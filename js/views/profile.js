@@ -117,11 +117,20 @@ class AppViewProfile extends LitElement {
   renderView () {
     switch (this.view) {
       case '#bookmarks':
-        return html`<profile-bookmark-feed user-url=${this.user.url} profile-url=${this.profileUser.url}></profile-bookmark-feed>`
+        return html`
+          <h2>Recent bookmarks</h2>
+          <profile-bookmark-feed user-url=${this.user.url} profile-url=${this.profileUser.url}></profile-bookmark-feed>
+        `
       case '#address-book':
-        return html`<profile-followgraph follows user-url=${this.user.url} profile-url=${this.profileUser.url}></profile-followgraph>`
+        return html`
+          <h2>Followed by ${this.profileUser.title || 'Anonymous'}</h2>
+          <profile-followgraph follows user-url=${this.user.url} profile-url=${this.profileUser.url}></profile-followgraph>
+        `
       default:
-        return html`<profile-post-feed user-url=${this.user.url} profile-url=${this.profileUser.url}></profile-post-feed>`
+        return html`
+          <h2>Recent posts</h2>
+          <profile-post-feed user-url=${this.user.url} profile-url=${this.profileUser.url}></profile-post-feed>
+        `
     }
   }
 

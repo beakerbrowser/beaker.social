@@ -2,8 +2,7 @@ import {css} from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-element.js'
 
 const cssStr = css`
 :host {
-  --ui-width: 960px;
-  --left-column-width: 200px;
+  --left-column-width: 220px;
   --feed-width: 560px;
   --column-spacing: 30px;
   --navbar-section-height: 50px;
@@ -97,6 +96,11 @@ main nav {
 main article {
   width: var(--feed-width);
   margin-top: 30px;
+}
+
+h2 {
+  margin-top: 0;
+  font-weight: normal;
 }
 
 profile-info {

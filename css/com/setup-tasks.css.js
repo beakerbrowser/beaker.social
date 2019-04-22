@@ -3,6 +3,7 @@ import {css} from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-element.js'
 const cssStr = css`
 .wrapper {
   color: #555;
+  margin: 0 0px 20px;
 }
 
 .link {

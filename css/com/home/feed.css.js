@@ -6,7 +6,8 @@ const cssStr = css`
 }
 
 beaker-feed-composer,
-beaker-feed-post {
+beaker-feed-post,
+.empty {
   border: 1px solid var(--border-color);
   border-radius: 4px;
   overflow: hidden;

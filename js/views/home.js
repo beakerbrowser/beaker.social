@@ -10,10 +10,10 @@ class AppViewHome extends LitElement {
     return html`
       <nav>
         <app-user-card .user=${this.user}></app-user-card>
-        <setup-tasks></setup-tasks>
         <app-content-nav route="home"></app-content-nav>
       </nav>
       <main>
+        <setup-tasks></setup-tasks>
         <home-feed user-url=${this.user ? this.user.url : ''}></home-feed>
       </main>
     `
