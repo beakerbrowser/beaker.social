@@ -8,15 +8,8 @@ const cssStr = css`
 }
 
 nav {
-  width: var(--left-column-width);
+  width: var(--app-nav-width);
   margin-right: var(--column-spacing);
-}
-
-app-user-card {
-  margin-bottom: 20px;
-  border-radius: 4px;
-  overflow: hidden;
-  border-color: var(--border-color);
 }
 
 bookmarks-feed {

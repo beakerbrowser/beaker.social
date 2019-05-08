@@ -25,13 +25,14 @@ export class AppHeader extends LitElement {
     return html`
       <link rel="stylesheet" href="/vendor/beaker-app-stdlib/css/fontawesome.css">
       <div class="${classMap({fullwidth: this.fullwidth})}">
-        <a class="text" href="/">Beaker.Social</a>
+        <a class="text brand" href="/"><img src="asset:favicon:${window.location}"> Beaker.Social</a>
+        <a class="text" href="/discover">Find people</a>
         <div class="spacer"></div>
         <beaker-app-header-search
           fontawesome-src="/vendor/beaker-app-stdlib/css/fontawesome.css"
           view-profile-base-url="/profile/"
         ></beaker-app-header-search>
-        <a href="/profile/${encodeURIComponent(this.currentUserUrl)}"><img class="profile" src="${this.currentUserUrl}/thumb"></a>
+        <button class="primary">New post</button>
       </div>
     `
   }

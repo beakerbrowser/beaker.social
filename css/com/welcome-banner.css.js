@@ -4,13 +4,20 @@ const cssStr = css`
 .wrapper {
   position: relative;
   box-sizing: border-box;
-  padding: 30px 0;
+  padding: 20px 20px;
   background: #fff;
+  border: 1px solid var(--border-color);
+  border-top: 0;
 }
 
 h1 {
   margin: 0;
   text-align: center;
+  font-size: 20px;
+  border-bottom: 1px solid var(--light-border-color);
+  padding-bottom: 14px;
+  margin-bottom: 14px;
+  color: rgba(0,0,0,.7);
 }
 
 small {
@@ -19,7 +26,7 @@ small {
 
 .animated-border {
   position: absolute;
-  bottom: 0;
+  top: 0;
   left: 0;
   height: 2px;
   right: 0;

@@ -46,7 +46,7 @@ ProfileCoverPhoto.styles = css`
 :host {
   display: block;
   flex: 1;
-  height: 40vh;
+  height: 30vh;
   --fallback-cover-color: linear-gradient(to bottom, hsla(216, 82%, 59%, 1), hsla(222, 85%, 55%, 1));
 }
 
@@ -57,7 +57,7 @@ ProfileCoverPhoto.styles = css`
 .fallback,
 img {
   object-fit: cover;
-  height: 40vh;
+  height: 30vh;
   width: 100%;
 }
 

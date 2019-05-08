@@ -2,14 +2,13 @@ import {css} from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-element.js'
 
 const cssStr = css`
 :host {
-  display: flex;
   align-items: center;
   color: var(--color-text--muted);
 }
 
-span,
 a {
   margin-left: 6px;
+  text-decoration: none;
 }
 
 img {
@@ -17,6 +16,10 @@ img {
   height: 24px;
   border-radius: 50%;
   object-fit: cover;
+}
+
+h5 {
+  margin-bottom: 6px;
 }
 `
 export default cssStr

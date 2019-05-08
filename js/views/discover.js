@@ -92,10 +92,6 @@ class AppViewDiscover extends LitElement {
 
   render () {
     return html`
-      <nav>
-        <app-user-card .user=${this.user}></app-user-card>
-        <app-content-nav route="discover"></app-content-nav>
-      </nav>
       <main>
         ${this.renderSuggestions()}
       </main>
@@ -119,7 +115,6 @@ class AppViewDiscover extends LitElement {
     }
     const keyFn = user => user.url + user.isFollowed // include .isFollowed to force a render on change
     return html`
-      <h2>Suggested follows</h2>
       <div class="suggestions">
         ${repeat(this.suggestions, keyFn, user => html`
           <beaker-profile-info-card

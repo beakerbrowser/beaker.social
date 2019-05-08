@@ -3,19 +3,19 @@ import {css} from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-element.js'
 const cssStr = css`
 :host {
   display: block;
-}
-
-beaker-feed-composer,
-beaker-feed-post,
-.empty {
   border: 1px solid var(--border-color);
-  border-radius: 4px;
+  border-radius: 2px;
   overflow: hidden;
-  margin-bottom: 8px;
+  background: #fff;
 }
 
-beaker-feed-composer {
-  padding: 10px;
+beaker-feed-post {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--light-border-color);
+}
+
+beaker-feed-post:last-of-type {
+  border: 0;
 }
 
 .empty {

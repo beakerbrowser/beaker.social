@@ -5,7 +5,6 @@ import { profiles } from './tmp-beaker.js'
 import { reactions } from './tmp-unwalled-garden.js'
 import feedMainCSS from '../css/main.css.js'
 import './com/app-header.js'
-import './com/welcome-banner.js'
 import './views/home.js'
 import './views/bookmarks.js'
 import './views/discover.js'
@@ -85,7 +84,6 @@ class AppMain extends routerMixin(LitElement) {
         current-user-url="${this.user.url}"
       ></app-header>
 
-      <welcome-banner></welcome-banner>
       <div class="view-wrapper" @add-reaction=${this.addReaction} @delete-reaction=${this.deleteReaction}>
         ${this.renderCurrentView()}
       </div>

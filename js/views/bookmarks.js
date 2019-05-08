@@ -29,7 +29,6 @@ class AppViewBookmarks extends LitElement {
   render () {
     return html`
       <nav>
-        <app-user-card .user=${this.user}></app-user-card>
         <app-content-nav route="bookmarks"></app-content-nav>
       </nav>
       <main>

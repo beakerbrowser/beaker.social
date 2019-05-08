@@ -12,14 +12,14 @@ class ProfileFollowgraph extends LitElement {
     return {
       userUrl: {type: String, attribute: 'user-url'},
       profileUrl: {type: String, attribute: 'profile-url'},
-      showFollowers: {type: Boolean, attribute: 'followers'},
+      view: {type: String},
       profiles: {type: Array}
     }
   }
 
   constructor () {
     super()
-    this.showFollowers = false
+    this.view = 'followers'
     this.userUrl = null
     this.profileUrl = null
     this.profiles = null
@@ -27,7 +27,7 @@ class ProfileFollowgraph extends LitElement {
 
   attributeChangedCallback (name, oldval, newval) {
     super.attributeChangedCallback(name, oldval, newval)
-    if (name === 'profile-url' && newval) {
+    if ((name === 'profile-url' || name === 'user-url') && this.profileUrl && this.userUrl) {
       // trigger a load when we have a user url
       this.load()
     }
@@ -35,10 +35,15 @@ class ProfileFollowgraph extends LitElement {
 
   async load () {
     var profiles
-    if (this.showFollowers) {
-      profiles = await graph.listFollowers(this.profileUrl)
-    } else {
-      profiles = await graph.listFollows(this.profileUrl)
+    let follows = await graph.listFollows(this.profileUrl, {filters: {followedBy: this.userUrl}})
+    let followers = await graph.listFollowers(this.profileUrl, {filters: {followedBy: this.userUrl}})
+    console.log({follows, followers})
+    if (this.view === 'followers') {
+      profiles = followers.filter(f1 => !follows.find(f2 => f1.url === f2.url))
+    } else if (this.view === 'follows') {
+      profiles = follows.filter(f1 => !followers.find(f2 => f1.url === f2.url))
+    } else if (this.view === 'connections') {
+      profiles = follows.filter(f1 => followers.find(f2 => f1.url === f2.url))
     }
     await Promise.all(profiles.map(async (profile) => {
       var [isFollowed, isFollowingYou, followers] = await Promise.all([
@@ -52,7 +57,15 @@ class ProfileFollowgraph extends LitElement {
       profile.followers = followers.filter(f => f.url !== this.profileUrl).slice(0, 6)
     }))
     this.profiles = profiles
-    console.log('graph', this.profiles)
+    console.log('graph', this.view, this.profiles)
+  }
+
+  get title () {
+    return ({
+      followers: 'Followed by:',
+      follows: 'Follows:',
+      connections: 'Connected with:'
+    })[this.view]
   }
 
   // rendering
@@ -61,26 +74,28 @@ class ProfileFollowgraph extends LitElement {
   render () {
     if (!this.profiles) {
       return html`
+        <h2>${this.title}</h2>
         <div class="empty">Loading...</div>
       `
     }
     if (this.profiles.length === 0) {
-      return html`
-        <div class="empty">This user ${this.showFollowers ? 'has no known followers' : 'is not following anybody'}.</div>
-      `
+      return html``
     }
     const keyFn = p => p.url + p.isFollowed // include .isFollowed to force a render on change
     return html`
-      ${repeat(this.profiles, keyFn, profile => html`
-        <beaker-profile-info-card
-          .user=${profile}
-          show-controls
-          view-profile-base-url="/profile/"
-          fontawesome-src="/vendor/beaker-app-stdlib/css/fontawesome.css"
-          @follow=${this.onFollow}
-          @unfollow=${this.onUnfollow}
-        ></beaker-profile-info-card>
-      `)}
+      <h2>${this.title}</h2>
+      <div class="grid">
+        ${repeat(this.profiles, keyFn, profile => html`
+          <beaker-profile-info-card
+            .user=${profile}
+            show-controls
+            view-profile-base-url="/profile/"
+            fontawesome-src="/vendor/beaker-app-stdlib/css/fontawesome.css"
+            @follow=${this.onFollow}
+            @unfollow=${this.onUnfollow}
+          ></beaker-profile-info-card>
+        `)}
+      </div>
     `
   }
 

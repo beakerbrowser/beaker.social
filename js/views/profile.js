@@ -85,6 +85,13 @@ class AppViewProfile extends LitElement {
         </section>
         <section class="toolbar">
           <div>
+            <profile-content-nav view=${this.view}></profile-content-nav>
+            <div class="spacer"></div>
+            <profile-actions
+              .profileUser=${this.profileUser}
+              ?is-current-user=${isViewingCurrentUser}
+              @profile-changed=${this.load}
+            ></profile-actions>
             <a class="${avatarCls}" href="/profile/${encodeURIComponent(this.profileUrl)}" @click=${this.onClickAvatar}>
               <beaker-img-fallbacks>
                 <img slot="img1" src="${this.profileUser.url}/thumb?cache=${this.thumbCacheBuster}">
@@ -92,23 +99,16 @@ class AppViewProfile extends LitElement {
               </beaker-img-fallbacks>
               <span class="change">Change photo</span>
             </a>
-            <profile-social-metrics profile-url="${this.profileUser.url}"></profile-social-metrics>
-            <div class="spacer"></div>
-            <profile-actions
-              .profileUser=${this.profileUser}
-              ?is-current-user=${isViewingCurrentUser}
-              @profile-changed=${this.load}
-            ></profile-actions>
           </div>
         </section>
       </header>
       <main>
         <div>
+          ${this.renderView()}
           <nav>
             <profile-info .profileUser=${this.profileUser}></profile-info>
-            <profile-content-nav view=${this.view}></profile-content-nav>
+            <profile-social-metrics profile-url="${this.profileUser.url}" current-user-url="${this.user.url}"></profile-social-metrics>
           </nav>
-          <article>${this.renderView()}</article>
         </div>
       </main>
     `
@@ -116,19 +116,16 @@ class AppViewProfile extends LitElement {
 
   renderView () {
     switch (this.view) {
-      case '#bookmarks':
-        return html`
-          <h2>Recent bookmarks</h2>
-          <profile-bookmark-feed user-url=${this.user.url} profile-url=${this.profileUser.url}></profile-bookmark-feed>
-        `
       case '#address-book':
         return html`
-          <h2>Followed by ${this.profileUser.title || 'Anonymous'}</h2>
-          <profile-followgraph follows user-url=${this.user.url} profile-url=${this.profileUser.url}></profile-followgraph>
+          <article>
+            <profile-followgraph view="connections" user-url=${this.user.url} profile-url=${this.profileUser.url}></profile-followgraph>
+            <profile-followgraph view="followers" user-url=${this.user.url} profile-url=${this.profileUser.url}></profile-followgraph>
+            <profile-followgraph view="follows" user-url=${this.user.url} profile-url=${this.profileUser.url}></profile-followgraph>
+          </article>
         `
       default:
         return html`
-          <h2>Recent posts</h2>
           <profile-post-feed user-url=${this.user.url} profile-url=${this.profileUser.url}></profile-post-feed>
         `
     }

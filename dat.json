@@ -1,4 +1,5 @@
 {
+  "type": "unwalled.garden/application",
   "title": "Beaker.Social",
   "description": "A distributed social network built on the unwalled.garden open standards",
   "fallback_page": "/index.html"

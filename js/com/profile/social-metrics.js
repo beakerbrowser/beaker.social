@@ -7,41 +7,71 @@ class ProfileSocialMetrics extends LitElement {
   static get properties () {
     return {
       profileUrl: {type: String, attribute: 'profile-url'},
-      followers: {type: Array}
+      currentUserUrl: {type: String, attribute: 'current-user-url'},
+      followers: {type: Array},
+      follows: {type: Array},
+      connections: {type: Array}
     }
   }
 
   constructor () {
     super()
     this.profileUrl = null
+    this.currentUserUrl = ''
     this.followers = []
+    this.follows = []
+    this.connections = []
   }
 
   attributeChangedCallback (name, oldval, newval) {
     super.attributeChangedCallback(name, oldval, newval)
-    if (name === 'profile-url' && newval) {
+    if ((name === 'profile-url' || name === 'current-user-url') && this.profileUrl && this.currentUserUrl) {
       // trigger a load when we have a user url
       this.load()
     }
   }
 
   async load () {
-    this.followers = await graph.listFollowers(this.profileUrl)
+    console.log(this.currentUserUrl)
+    var connections = []
+    var followers = await graph.listFollowers(this.profileUrl, {filters: {followedBy: this.currentUserUrl}})
+    var follows = await graph.listFollows(this.profileUrl, {filters: {followedBy: this.currentUserUrl}})
+
+    followers = followers.filter(f1 => {
+      let i = follows.findIndex(f2 => f2.url === f1.url)
+      if (i !== -1) {
+        follows.splice(i, 1)
+        connections.push(f1)
+        return false
+      }
+      return true
+    })
+    console.log({followers, follows, connections})
+
+    this.followers = followers
+    this.follows = follows
+    this.connections = connections
   }
 
   render () {
     if (!this.profileUrl) {
       return html`<div></div>`
     }
-    var n = this.followers.length - 8
     return html`
-      Followed by:
-      ${repeat(this.followers.slice(0, 8), f => f, f => this.renderUser(f))}
-      <span>
-        ${n > 0 ? `+${n} others` : ''}
-        ${this.followers.length === 0 ? 'nobody you follow': ''}
-      </span>
+      ${this.renderSection(this.connections, 'Connected with:')}
+      ${this.renderSection(this.followers, 'Followed by:')}
+      ${this.renderSection(this.follows, 'Follows:')}
     `
+  }
+
+  renderSection (items, label) {
+    return items.length > 0
+      ? html`
+        <div>
+          <h5>${label}</h5>
+          ${repeat(items, f => f, f => this.renderUser(f))}
+        </div>`
+      : html``
   }
 
   renderUser (user) {

@@ -53,7 +53,6 @@ class BookmarksFeed extends LitElement {
   render () {
     return html`
       <link rel="stylesheet" href="/vendor/beaker-app-stdlib/css/fontawesome.css">
-      <h2>Latest bookmarks</h2>
       <div class="bookmarks">
         ${repeat(this.bookmarks, b => b, b => html`<beaker-feed-bookmark user-url=${this.user.url} .bookmark=${b}></beaker-feed-bookmark>`)}
         ${this.bookmarks.length === 0

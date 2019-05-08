@@ -1,16 +1,20 @@
 import {css} from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-element.js'
+import buttonsCSS from '/vendor/beaker-app-stdlib/css/buttons2.css.js'
 
 const cssStr = css`
 :host {
-  --app-header--width: 960px;
+  --app-header--width: var(--ui-width);
   --app-header--height: 50px;
 
   display: block;
   background: #fff;
-  box-shadow: 0 0 5px rgba(0, 0, 0, .25);
+  border-bottom: 1px solid var(--border-color);
+  padding: 0 20px;
   position: relative;
   z-index: 2;
 }
+
+${buttonsCSS}
 
 :host > div {
   display: flex;
@@ -27,7 +31,8 @@ const cssStr = css`
 beaker-app-header-search {
   --input-bg-color: #fcfcfd;
   --input-border-radius: 50px;
-  margin-left: 26px;
+  margin-right: 26px;
+  width: 250px;
 }
 
 a {
@@ -44,6 +49,20 @@ a.text {
   font-weight: 500;
   line-height: 16px;
   margin-left: 36px;
+}
+
+a.text img {
+  position: relative;
+  top: -2px;
+  width: 32px;
+  height: 32px;
+  vertical-align: middle;
+  margin-right: 2px;
+}
+
+a.text.brand {
+  font-size: 16px;
+  line-height: 32px;
 }
 
 a:first-child {
@@ -70,35 +89,14 @@ a.active:after {
   background: var(--blue);
 }
 
-a.todo {
-  cursor: default;
-  color: #aaa;
-}
-
-a.todo:hover {
-  position: relative;
-}
-
-a.todo:hover:after {
-  content: 'TODO';
-  position: absolute;
-  left: -10px;
-  top: 2px;
-  font-size: 12px;
-  font-weight: bold;
-  color: #222;
-  text-shadow: 0 0 3px #fff;
-}
-
 .spacer {
   flex: 1;
 }
 
-img.profile {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  object-fit: cover;
+button {
+  font-size: 14px;
+  color: rgba(255,255,255,.8);
+  cursor: pointer;
 }
 `
 export default cssStr

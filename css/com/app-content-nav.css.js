@@ -8,7 +8,6 @@ a {
   text-decoration: none;
   padding: 5px 10px;
   margin-bottom: 5px;
-  font-weight: 500;
   border-radius: 4px;
 }
 
