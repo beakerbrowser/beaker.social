@@ -8,7 +8,9 @@ class AppViewHome extends LitElement {
   render () {
     return html`
       <main>
-        <home-feed user-url=${this.user ? this.user.url : ''}></home-feed>
+        <div>
+          <home-feed user-url=${this.user ? this.user.url : ''}></home-feed>
+        </div>
         <nav>
           <welcome-banner></welcome-banner>
           <setup-tasks></setup-tasks>

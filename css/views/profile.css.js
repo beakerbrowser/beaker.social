@@ -11,7 +11,7 @@ const cssStr = css`
   --column-spacing: 30px;
   --navbar-section-height: 50px;
   --toolbar-section-height: 50px;
-  --avatar-size: 240px;
+  --avatar-size: 220px;
 }
 
 .spacer {

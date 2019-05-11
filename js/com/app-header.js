@@ -32,7 +32,6 @@ export class AppHeader extends LitElement {
           fontawesome-src="/vendor/beaker-app-stdlib/css/fontawesome.css"
           view-profile-base-url="/profile/"
         ></beaker-app-header-search>
-        <button class="primary">New post</button>
       </div>
     `
   }

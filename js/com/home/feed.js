@@ -3,6 +3,7 @@ import { repeat } from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-html/di
 import { posts, graph } from '../../tmp-unwalled-garden.js'
 import homeFeedCSS from '../../../css/com/home/feed.css.js'
 import '/vendor/beaker-app-stdlib/js/com/feed/post.js'
+import '/vendor/beaker-app-stdlib/js/com/feed/composer.js'
 
 const LOAD_LIMIT = 50
 
@@ -53,6 +54,7 @@ class HomeFeed extends LitElement {
   render () {
     return html`
       <link rel="stylesheet" href="/vendor/beaker-app-stdlib/css/fontawesome.css">
+      <beaker-feed-composer @submit=${this.onSubmitFeedComposer}></beaker-feed-composer>
       ${repeat(this.posts, post => html`<beaker-feed-post .post=${post} user-url="${this.userUrl}" view-profile-base-url="/profile/"></beaker-feed-post>`)}
       ${this.posts.length === 0
         ? html`

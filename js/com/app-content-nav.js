@@ -1,6 +1,7 @@
 import {LitElement, html} from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-element.js'
 import {classMap} from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-html/directives/class-map.js'
-import profileContentNav from '../../../css/com/app-content-nav.css.js'
+import tooltipCSS from '/vendor/beaker-app-stdlib/css/tooltip.css.js'
+import appContentNavCSS from '../../../css/com/app-content-nav.css.js'
 
 class AppContentNav extends LitElement {
   static get properties () {
@@ -15,23 +16,22 @@ class AppContentNav extends LitElement {
   }
 
   render () {
+    const item = (active, icon, label) => html`
+      <a class="${classMap({text: true, active})}" href="/" data-tooltip="${label}"><i class="fa-fw ${icon}"></i></a>
+    `
+
     return html`
       <link rel="stylesheet" href="/vendor/beaker-app-stdlib/css/fontawesome.css">
-      <a class="${classMap({text: true, active: this.isHomeActive})}" href="/"><i class="far fa-fw fa-newspaper"></i> Front page</a>
-      <a class="${classMap({text: true, active: this.isBookmarksActive})}" href="/bookmarks"><i class="far fa-fw fa-star"></i> Latest bookmarks</a>
-      <a class="${classMap({text: true, active: this.isDiscoverActive})}" href="/discover"><i class="fas fa-fw fa-user-plus"></i> Find users</a>
+      ${item(true, 'fas fa-list', 'All posts')}
+      ${item(false, 'fas fa-file-alt', 'Websites')}
+      ${item(false, 'fas fa-image', 'Images')}
+      ${item(false, 'fas fa-music', 'Music')}
+      ${item(false, 'fas fa-film', 'Videos')}
+      ${item(false, 'fas fa-microphone', 'Podcasts')}
+      ${item(false, 'far fa-window-restore', 'Applications')}
+      ${item(false, 'fas fa-mouse-pointer', 'Interfaces')}
+      ${item(false, 'fas fa-cubes', 'Modules')}
     `
-    // TODO:
-    /*
-      <hr>
-      <h5>Latest</h5>
-      <a class="${classMap({text: true, active: false})}" href="/"><i class="fas fa-fw fa-music"></i> Music</a>
-      <a class="${classMap({text: true, active: false})}" href="/"><i class="fas fa-fw fa-microphone"></i> Podcasts</a>
-      <a class="${classMap({text: true, active: false})}" href="/"><i class="fas fa-fw fa-film"></i> Videos</a>
-      <a class="${classMap({text: true, active: false})}" href="/"><i class="fas fa-fw fa-code"></i> Software</a>
-      <a class="${classMap({text: true, active: false})}" href="/"><i class="far fa-fw fa-window-maximize"></i> Sites</a>
-      <a class="${classMap({text: true, active: false})}" href="/"><i class="far fa-fw fa-file-word"></i> Wikis</a>
-    */
   }
 
   get isHomeActive () {
@@ -46,5 +46,5 @@ class AppContentNav extends LitElement {
     return this.route === 'discover'
   }
 }
-AppContentNav.styles = profileContentNav
+AppContentNav.styles = [tooltipCSS, appContentNavCSS]
 customElements.define('app-content-nav', AppContentNav)

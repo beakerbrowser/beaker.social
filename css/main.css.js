@@ -2,10 +2,10 @@ import {css} from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-element.js'
 
 const cssStr = css`
 :host {
-  --ui-width: 1000px;
+  --ui-width: 900px;
   --left-column-width: 260px;
   --app-nav-width: 190px;
-  --posts-width: 670px;
+  --posts-width: 570px;
   --bookmarks-width: 560px;
   --discover-width: 600px;
   --column-spacing: 15px;

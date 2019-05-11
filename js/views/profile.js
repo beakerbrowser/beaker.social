@@ -126,7 +126,9 @@ class AppViewProfile extends LitElement {
         `
       default:
         return html`
-          <profile-post-feed user-url=${this.user.url} profile-url=${this.profileUser.url}></profile-post-feed>
+          <article>
+            <profile-post-feed user-url=${this.user.url} profile-url=${this.profileUser.url}></profile-post-feed>
+          </article>
         `
     }
   }

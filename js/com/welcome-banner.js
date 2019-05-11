@@ -13,7 +13,6 @@ export class WelcomeBanner extends LitElement {
     return html`
       <div class="wrapper">
         <link rel="stylesheet" href="/vendor/beaker-app-stdlib/css/fontawesome.css">
-        <div class="animated-border"></div>
         <h1>Welcome to Beaker.Social<br><small>a distributed social network</small></h1>
         <div style="color: rgba(0,0,0,.6)">
           This is your front page. It shows the latest posts from the people you follow.
