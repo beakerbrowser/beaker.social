@@ -26,7 +26,7 @@ export class AppHeader extends LitElement {
       <link rel="stylesheet" href="/vendor/beaker-app-stdlib/css/fontawesome.css">
       <div class="${classMap({fullwidth: this.fullwidth})}">
         <a class="text brand" href="/"><img src="asset:favicon:${window.location}"> Beaker.Social</a>
-        <a class="text" href="/discover">Find people</a>
+        <a class="text" href="/discover">Discover</a>
         <div class="spacer"></div>
         <beaker-app-header-search
           fontawesome-src="/vendor/beaker-app-stdlib/css/fontawesome.css"
