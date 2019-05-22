@@ -1,6 +1,6 @@
 import { LitElement, html } from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-element.js'
 import { repeat } from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-html/directives/repeat.js'
-import { posts, graph } from '../../tmp-unwalled-garden.js'
+import { posts, graph, reactions } from '../../tmp-unwalled-garden.js'
 import homeFeedCSS from '../../../css/com/home/feed.css.js'
 import '/vendor/beaker-app-stdlib/js/com/feed/post.js'
 import '/vendor/beaker-app-stdlib/js/com/feed/composer.js'
@@ -40,11 +40,15 @@ class HomeFeed extends LitElement {
   async load () {
     this.hasUserPosted = (await posts.query({filters: {authors: this.userUrl}, limit: 1})).length > 0
     this.followedUsers = (await graph.listFollows(this.userUrl)).map(site => site.url)
-    this.posts = await posts.query({
+    var p = await posts.query({
       filters: {authors: this.feedAuthors},
       limit: LOAD_LIMIT,
       reverse: true
     })
+    await Promise.all(p.map(async (post) => {
+      post.reactions = await reactions.listReactions(post.url)
+    }))
+    this.posts = p
     console.log(this.posts)
   }
 

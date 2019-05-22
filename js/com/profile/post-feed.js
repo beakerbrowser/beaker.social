@@ -1,6 +1,6 @@
 import {LitElement, html} from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-element.js'
 import {repeat} from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-html/directives/repeat.js'
-import {posts} from '../../tmp-unwalled-garden.js'
+import {posts, reactions} from '../../tmp-unwalled-garden.js'
 import profilePostFeedCSS from '../../../css/com/profile/post-feed.css.js'
 import '/vendor/beaker-app-stdlib/js/com/feed/post.js'
 
@@ -30,7 +30,11 @@ class ProfilePostFeed extends LitElement {
   }
 
   async load () {
-    this.posts = await posts.query({filters: {authors: this.profileUrl}, limit: LOAD_LIMIT, reverse: true})
+    var p = await posts.query({filters: {authors: this.profileUrl}, limit: LOAD_LIMIT, reverse: true})
+    await Promise.all(p.map(async (post) => {
+      post.reactions = await reactions.listReactions(post.url)
+    }))
+    this.posts = p
   }
 
   render () {
