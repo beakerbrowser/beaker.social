@@ -1,6 +1,6 @@
 import { LitElement, html } from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-element.js'
 import { profiles } from '../tmp-beaker.js'
-import { graph, posts } from '../tmp-unwalled-garden.js'
+import { follows, posts } from '../tmp-unwalled-garden.js'
 import setupTasksCSS from '../../css/com/setup-tasks.css.js'
 import { BeakerEditProfile } from '/vendor/beaker-app-stdlib/js/com/popups/edit-profile.js'
 import { BeakerEditThumb } from '/vendor/beaker-app-stdlib/js/com/popups/edit-thumb.js'
@@ -33,11 +33,11 @@ class SetupTasks extends LitElement {
 
   async load () {
     // detect whether each step has been completed
-    var profile = await profiles.getCurrentUser()
+    var profile = await profiles.me()
     this.isProfileSetup = (!!profile.title && profile.title !== 'Anonymous') || !!profile.description
     this.isAvatarSet = !!localStorage.hasClickedSetAvatar
-    this.hasFollowed = (await graph.listFollows(profile.url, {limit: 1})).length > 0
-    this.hasPosted = (await posts.query({filters: {authors: profile.url}, limit: 1})).length > 0
+    this.hasFollowed = (await follows.list({filters: {authors: profile.url}, limit: 1})).length > 0
+    this.hasPosted = (await posts.list({filters: {authors: profile.url}, limit: 1})).length > 0
     // dismiss if all have been done
     if (this.numStepsCompleted === 4) {
       localStorage.isSetupTasksDismissed = 1

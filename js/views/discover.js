@@ -3,7 +3,7 @@ import { repeat } from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-html/di
 import discoverViewCSS from '../../css/views/discover.css.js'
 import * as toast from '/vendor/beaker-app-stdlib/js/com/toast.js'
 import { profiles } from '../tmp-beaker.js'
-import { graph } from '../tmp-unwalled-garden.js'
+import { follows } from '../tmp-unwalled-garden.js'
 import '../com/app-user-card.js'
 import '../com/app-content-nav.js'
 import '/vendor/beaker-app-stdlib/js/com/profile-info-card.js'
@@ -72,13 +72,13 @@ class AppViewDiscover extends LitElement {
       
       // fetch graph data
       var [isFollowed, isFollowingYou, followers] = await Promise.all([
-        graph.isAFollowingB(this.user.url, profile.url),
-        graph.isAFollowingB(profile.url, this.user.url),
-        graph.listFollowers(profile.url, {filters: {followedBy: this.user.url}})
+        follows.get(this.user.url, profile.url),
+        follows.get(profile.url, this.user.url),
+        follows.list({filters: {subjects: profile.url}})
       ])
-      profile.isFollowed = isFollowed
-      profile.isFollowingYou = isFollowingYou
-      profile.followers = followers.filter(f => f.url !== this.user.url).slice(0, 6)
+      profile.isFollowed = !!isFollowed
+      profile.isFollowingYou = !!isFollowingYou
+      profile.followers = followers.map(({author}) => author).filter(f => f.url !== this.user.url).slice(0, 6)
 
       return profile
     }))
@@ -134,14 +134,14 @@ class AppViewDiscover extends LitElement {
   // =
 
   async onFollow (e) {
-    await graph.follow(e.detail.url)
+    await follows.add(e.detail.url)
     toast.create(`Followed ${e.detail.title}`, '', 1e3)
     this.suggestions.find(f => f.url === e.detail.url).isFollowed = true
     this.requestUpdate()
   }
 
   async onUnfollow (e) {
-    await graph.unfollow(e.detail.url)
+    await follows.remove(e.detail.url)
     toast.create(`Unfollowed ${e.detail.title}`, '', 1e3)
     this.suggestions.find(f => f.url === e.detail.url).isFollowed = false
     await this.requestUpdate()

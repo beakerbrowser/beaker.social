@@ -2,7 +2,7 @@ import {LitElement, html} from '/vendor/beaker-app-stdlib/vendor/lit-element/lit
 import { BeakerEditProfile } from '/vendor/beaker-app-stdlib/js/com/popups/edit-profile.js'
 import * as toast from '/vendor/beaker-app-stdlib/js/com/toast.js'
 import {profiles, library} from '../../tmp-beaker.js'
-import {graph} from '../../tmp-unwalled-garden.js'
+import {follows} from '../../tmp-unwalled-garden.js'
 import profileActionsCSS from '../../../css/com/profile/actions.css.js'
 import '/vendor/beaker-app-stdlib/js/com/hoverable.js'
 
@@ -68,10 +68,10 @@ class ProfileActions extends LitElement {
 
   async onToggleFollow () {
     if (this.profileUser.isFollowed) {
-      await graph.unfollow(this.profileUser.url)
+      await follows.remove(this.profileUser.url)
       toast.create(`Unfollowed ${this.profileUser.title}`, '', 1e3)
     } else {
-      await graph.follow(this.profileUser.url)
+      await follows.add(this.profileUser.url)
       toast.create(`Followed ${this.profileUser.title}`, '', 1e3)
     }
     this.dispatchEvent(new Event('profile-changed'))

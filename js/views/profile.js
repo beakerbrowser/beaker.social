@@ -2,7 +2,7 @@ import { LitElement, html } from '/vendor/beaker-app-stdlib/vendor/lit-element/l
 import { classMap } from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-html/directives/class-map.js'
 import { BeakerEditThumb } from '/vendor/beaker-app-stdlib/js/com/popups/edit-thumb.js'
 import { profiles } from '../tmp-beaker.js'
-import { graph } from '../tmp-unwalled-garden.js'
+import { follows } from '../tmp-unwalled-garden.js'
 import profileCSS from '../../css/views/profile.css.js'
 import messageCSS from '/vendor/beaker-app-stdlib/css/com/message.css.js'
 import '/vendor/beaker-app-stdlib/js/com/profile-info-card.js'
@@ -59,8 +59,8 @@ class AppViewProfile extends LitElement {
       var datInfo = await (new DatArchive(this.profileUrl)).getInfo()
       var profileUser = await profiles.index(this.profileUrl)
       profileUser.isOwner = datInfo.isOwner
-      profileUser.isFollowed = await graph.isAFollowingB(this.user.url, profileUser.url)
-      profileUser.isFollowingYou = await graph.isAFollowingB(profileUser.url, this.user.url)
+      profileUser.isFollowed = !!(await follows.get(this.user.url, profileUser.url))
+      profileUser.isFollowingYou = !!(await follows.get(profileUser.url, this.user.url))
       this.profileUser = profileUser
       document.title = `${this.profileUser.title || 'Anonymous'} | Beaker.Social`
       console.log('profile user', this.profileUser)

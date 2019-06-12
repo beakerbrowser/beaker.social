@@ -1,6 +1,6 @@
 import { LitElement, html } from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-element.js'
 import { repeat } from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-html/directives/repeat.js'
-import { graph } from '../../tmp-unwalled-garden.js'
+import { follows as followsAPI } from '../../tmp-unwalled-garden.js'
 import profileSocialMetricsCSS from '../../../css/com/profile/social-metrics.css.js'
 
 class ProfileSocialMetrics extends LitElement {
@@ -34,8 +34,8 @@ class ProfileSocialMetrics extends LitElement {
   async load () {
     console.log(this.currentUserUrl)
     var connections = []
-    var followers = await graph.listFollowers(this.profileUrl, {filters: {followedBy: this.currentUserUrl}})
-    var follows = await graph.listFollows(this.profileUrl, {filters: {followedBy: this.currentUserUrl}})
+    var followers = (await followsAPI.list({filters: {subjects: this.profileUrl}})).map(({author}) => author)
+    var follows = (await followsAPI.list({filters: {authors: this.profileUrl}})).map(({subject}) => subject)
 
     followers = followers.filter(f1 => {
       let i = follows.findIndex(f2 => f2.url === f1.url)

@@ -1,7 +1,7 @@
 import { LitElement, html } from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-element.js'
 import { repeat } from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-html/directives/repeat.js'
 import * as toast from '/vendor/beaker-app-stdlib/js/com/toast.js'
-import { graph } from '../../tmp-unwalled-garden.js'
+import { follows as followsAPI } from '../../tmp-unwalled-garden.js'
 import profileFollowgraphCSS from '../../../css/com/profile/followgraph.css.js'
 import '/vendor/beaker-app-stdlib/js/com/profile-info-card.js'
 
@@ -35,8 +35,8 @@ class ProfileFollowgraph extends LitElement {
 
   async load () {
     var profiles
-    let follows = await graph.listFollows(this.profileUrl, {filters: {followedBy: this.userUrl}})
-    let followers = await graph.listFollowers(this.profileUrl, {filters: {followedBy: this.userUrl}})
+    let follows = (await followsAPI.list({filters: {authors: this.profileUrl}})).map(({subject}) => subject)
+    let followers = (await followsAPI.list({filters: {subjects: this.profileUrl}})).map(({author}) => author)
     console.log({follows, followers})
     if (this.view === 'followers') {
       profiles = followers.filter(f1 => !follows.find(f2 => f1.url === f2.url))
@@ -47,14 +47,14 @@ class ProfileFollowgraph extends LitElement {
     }
     await Promise.all(profiles.map(async (profile) => {
       var [isFollowed, isFollowingYou, followers] = await Promise.all([
-        graph.isAFollowingB(this.userUrl, profile.url),
-        graph.isAFollowingB(profile.url, this.userUrl),
-        graph.listFollowers(profile.url, {filters: {followedBy: this.userUrl}})
+        followsAPI.get(this.userUrl, profile.url),
+        followsAPI.get(profile.url, this.userUrl),
+        followsAPI.list({filters: {subjects: profile.url}})
       ])
       profile.isYou = profile.url === this.userUrl
-      profile.isFollowed = isFollowed
-      profile.isFollowingYou = isFollowingYou
-      profile.followers = followers.filter(f => f.url !== this.profileUrl).slice(0, 6)
+      profile.isFollowed = !!isFollowed
+      profile.isFollowingYou = !!isFollowingYou
+      profile.followers = followers.map(({author}) => author).filter(f => f.url !== this.profileUrl).slice(0, 6)
     }))
     this.profiles = profiles
     console.log('graph', this.view, this.profiles)
@@ -103,14 +103,14 @@ class ProfileFollowgraph extends LitElement {
   // =
 
   async onFollow (e) {
-    await graph.follow(e.detail.url)
+    await followsAPI.add(e.detail.url)
     toast.create(`Followed ${e.detail.title}`, '', 1e3)
     this.profiles.find(f => f.url === e.detail.url).isFollowed = true
     this.requestUpdate()
   }
 
   async onUnfollow (e) {
-    await graph.unfollow(e.detail.url)
+    await followsAPI.remove(e.detail.url)
     toast.create(`Unfollowed ${e.detail.title}`, '', 1e3)
     this.profiles.find(f => f.url === e.detail.url).isFollowed = false
     await this.requestUpdate()

@@ -2,7 +2,7 @@ import { LitElement, html } from '/vendor/beaker-app-stdlib/vendor/lit-element/l
 import { repeat } from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-html/directives/repeat.js'
 import { timeDifference } from '/vendor/beaker-app-stdlib/js/time.js'
 import { bookmarks } from '../../tmp-beaker.js'
-import { graph, reactions } from '../../tmp-unwalled-garden.js'
+import { follows, reactions } from '../../tmp-unwalled-garden.js'
 import bookmarksFeedCSS from '../../../css/com/bookmarks/feed.css.js'
 import '/vendor/beaker-app-stdlib/js/com/feed/bookmark.js'
 
@@ -34,14 +34,14 @@ class BookmarksFeed extends LitElement {
   }
 
   async load () {
-    this.followedUsers = (await graph.listFollows(this.user.url)).map(site => site.url)
+    this.followedUsers = (await follows.list({filters: {authors: this.user.url}})).map(({subject}) => subject.url)
     var rows = await bookmarks.query({
       filters: {authors: this.feedAuthors, isPublic: true},
       sortBy: 'createdAt',
       limit: LOAD_LIMIT
     })
     await Promise.all(rows.map(async (b) => {
-      b.reactions = await reactions.listReactions(b.record.url)
+      b.reactions = await reactions.tabulate(b.record.url)
     }))
     this.bookmarks = rows
     console.log(this.bookmarks)

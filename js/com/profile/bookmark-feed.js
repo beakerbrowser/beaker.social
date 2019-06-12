@@ -1,5 +1,5 @@
 import { LitElement, html } from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-element.js'
-import { repeat} from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-html/directives/repeat.js'
+import { repeat } from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-html/directives/repeat.js'
 import { bookmarks } from '../../tmp-beaker.js'
 import { reactions } from '../../tmp-unwalled-garden.js'
 import profileFeedCSS from '../../../css/com/profile/bookmark-feed.css.js'
@@ -38,7 +38,7 @@ class ProfileBookmarkFeed extends LitElement {
       reverse: true
     })
     await Promise.all(rows.map(async (b) => {
-      b.reactions = await reactions.listReactions(b.record.url)
+      b.reactions = await reactions.tabulate(b.record.url)
     }))
     this.bookmarks = rows
     console.log(this.bookmarks)

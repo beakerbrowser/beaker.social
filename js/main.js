@@ -37,7 +37,7 @@ class AppMain extends routerMixin(LitElement) {
   }
 
   async load () {
-    this.user = await profiles.getCurrentUser()
+    this.user = await profiles.me()
     console.log('user', this.user)
   }
 
@@ -110,7 +110,7 @@ class AppMain extends routerMixin(LitElement) {
 
   async addReaction (e) {
     try {
-      await reactions.addReaction(e.detail.topic, e.detail.emoji)
+      await reactions.add(e.detail.topic, e.detail.emoji)
     } catch (e) {
       console.error('Failed to add reaction', e)
       toast.create('Something went wrong', 'error')
@@ -119,7 +119,7 @@ class AppMain extends routerMixin(LitElement) {
 
   async deleteReaction (e) {
     try {
-      await reactions.deleteReaction(e.detail.topic, e.detail.emoji)
+      await reactions.delete(e.detail.topic, e.detail.emoji)
     } catch (e) {
       console.error('Failed to remove reaction', e)
       toast.create('Something went wrong', 'error')

@@ -1,6 +1,6 @@
 import { LitElement, html } from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-element.js'
 import { repeat } from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-html/directives/repeat.js'
-import { posts, graph, reactions } from '../../tmp-unwalled-garden.js'
+import { posts, follows, reactions } from '../../tmp-unwalled-garden.js'
 import homeFeedCSS from '../../../css/com/home/feed.css.js'
 import '/vendor/beaker-app-stdlib/js/com/feed/post.js'
 import '/vendor/beaker-app-stdlib/js/com/feed/composer.js'
@@ -38,15 +38,15 @@ class HomeFeed extends LitElement {
   }
 
   async load () {
-    this.hasUserPosted = (await posts.query({filters: {authors: this.userUrl}, limit: 1})).length > 0
-    this.followedUsers = (await graph.listFollows(this.userUrl)).map(site => site.url)
-    var p = await posts.query({
+    this.hasUserPosted = (await posts.list({filters: {authors: this.userUrl}, limit: 1})).length > 0
+    this.followedUsers = (await follows.list({filters: {authors: this.userUrl}})).map(({subject}) => subject.url)
+    var p = await posts.list({
       filters: {authors: this.feedAuthors},
       limit: LOAD_LIMIT,
       reverse: true
     })
     await Promise.all(p.map(async (post) => {
-      post.reactions = await reactions.listReactions(post.url)
+      post.reactions = await reactions.tabulate(post.url)
     }))
     this.posts = p
     console.log(this.posts)
@@ -76,7 +76,8 @@ class HomeFeed extends LitElement {
   async onSubmitFeedComposer (e) {
     // add the new post
     try {
-      await posts.addPost({content: {body: e.detail.body}})
+      console.log({body: e.detail.body})
+      await posts.add({body: e.detail.body})
     } catch (e) {
       alert('Something went wrong. Please let the Beaker team know! (An error is logged in the console.)')
       console.error('Failed to add post')

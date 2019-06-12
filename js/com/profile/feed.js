@@ -29,9 +29,9 @@ class ProfileFeed extends LitElement {
   }
 
   async load () {
-    var p = await posts.query({filters: {authors: this.profileUrl}, limit: LOAD_LIMIT, reverse: true})
+    var p = await posts.list({filters: {authors: this.profileUrl}, limit: LOAD_LIMIT, reverse: true})
     await Promise.all(p.map(async (post) => {
-      post.reactions = await reactions.listReactions(post.url)
+      post.reactions = await reactions.tabulate(post.url)
     }))
     this.posts = p
   }
