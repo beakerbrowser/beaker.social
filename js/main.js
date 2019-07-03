@@ -1,131 +1,213 @@
 import { LitElement, html } from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-element.js'
-import { routerMixin } from '/vendor/beaker-app-stdlib/vendor/lit-element-router/index.js'
+import { repeat } from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-html/directives/repeat.js'
+import { classMap } from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-html/directives/class-map.js'
 import * as toast from '/vendor/beaker-app-stdlib/js/com/toast.js'
-import { profiles } from './tmp-beaker.js'
-import { reactions } from './tmp-unwalled-garden.js'
+import { profiles, follows, posts, comments, reactions } from 'dat://unwalled.garden/index.js'
 import feedMainCSS from '../css/main.css.js'
-import './com/app-header.js'
-import './views/home.js'
-import './views/bookmarks.js'
-import './views/discover.js'
-import './views/profile.js'
-import './views/not-found.js'
+import '/vendor/beaker-app-stdlib/js/com/feed/post.js'
+import '/vendor/beaker-app-stdlib/js/com/feed/composer.js'
+import '/vendor/beaker-app-stdlib/js/com/profile-info-card.js'
+import './com/expanded-post.js'
 
-class AppMain extends routerMixin(LitElement) {
+const LOAD_LIMIT = 50
+
+class AppMain extends LitElement {
   static get properties () {
     return {
-      user: {type: Object},
-      routeParams: {type: Object}
+      posts: {type: Array},
+      expandedPost: {type: Object}
     }
   }
-
-  static get routes() {
-    return [
-      {name: 'home', pattern: ''},
-      {name: 'bookmarks', pattern: 'bookmarks'},
-      {name: 'discover', pattern: 'discover'},
-      {name: 'profile', pattern: 'profile/(.*)'},
-      {name: 'not-found', pattern: '*'}
-    ];
-}
 
   constructor () {
     super()
+
     this.user = null
-    this.setupPromise = this.load()
-    this.routeParams = {}
+    this.followedUsers = []
+    this.posts = []
+    this.expandedPost = null
+
+    this.load()
+  }
+
+  get feedAuthors () {
+    if (!this.user) return []
+    return [this.user.url].concat(this.followedUsers)
   }
 
   async load () {
-    this.user = await profiles.me()
-    console.log('user', this.user)
-  }
-
-  async onRoute(route, params, query, data) {
-    await this.setupPromise
-
-    var routeParams = {}
-    if (route === 'profile') {
-      // extract the profile url
-      routeParams.profileUrl = decodeURIComponent(window.location.pathname.slice('/profile/'.length))
-      // validate the URL
-      var urlp
-      try { urlp = new URL(routeParams.profileUrl) }
-      catch (e) {
-        try { urlp = new URL(`dat://${routeParams.profileUrl}`) }
-        catch (e) {}
-      }
-      if (!urlp) {
-        route = 'not-found'
-      } else if (urlp.protocol !== 'dat:') {
-        route = 'not-found'
-      } else {
-        try {
-          urlp.hostname = await DatArchive.resolveName(urlp.hostname)
-          routeParams.profileUrl = urlp.toString()
-        } catch (e) {
-          route = 'not-found'
-        }
-      }
-    }
-    console.log(route, routeParams)
-    this.route = route
-    this.routeParams = routeParams
-  }
-
-  render() {
     if (!this.user) {
-      return html`<div></div>`
+      this.user = await profiles.me()
     }
+    this.followedUsers = (await follows.list({filters: {authors: this.user.url}})).map(({topic}) => topic.url)
+
+    var p = await posts.list({
+      filters: {authors: this.feedAuthors},
+      limit: LOAD_LIMIT,
+      reverse: true
+    })
+    p = p.filter(post => post.body)
+    await Promise.all(p.map(async (post) => {
+      var [c, r] = await Promise.all([
+        comments.list({filters: {topics: post.url, authors: this.feedAuthors}}),
+        reactions.tabulate(post.url, {filters: {authors: this.feedAuthors}})
+      ])
+      post.numComments = c.length
+      post.reactions = r
+    }))
+    this.posts = p
+    console.log(this.posts)
+  }
+
+  async loadPostComments (post) {
+    post.comments = await comments.thread(post.url, {filters: {authors: this.feedAuthors}})
+    await loadCommentReactions(this.feedAuthors, post.comments)
+    console.log('loaded', post.comments)
+  }
+
+  // rendering
+  // =
+
+  render () {
     return html`
       <link rel="stylesheet" href="/vendor/beaker-app-stdlib/css/fontawesome.css">
-      <app-header
-        route="${this.route}"
-        current-user-url="${this.user.url}"
-      ></app-header>
-
-      <div class="view-wrapper" @add-reaction=${this.addReaction} @delete-reaction=${this.deleteReaction}>
-        ${this.renderCurrentView()}
+      <div class="${classMap({feed: true, visible: !this.expandedPost})}">
+        <div class="feed-inner">
+          <beaker-feed-composer @submit=${this.onSubmitPost}></beaker-feed-composer>
+          ${repeat(this.posts, post => html`
+            <beaker-feed-post
+              .post=${post}
+              user-url="${this.user.url}"
+              @add-reaction=${this.onAddReaction}
+              @delete-reaction=${this.onDeleteReaction}
+              @expand=${this.onExpandPost}
+              @delete=${this.onDeletePost}
+            ></beaker-feed-post>
+          `)}
+          ${this.posts.length === 0
+            ? html`
+              <div class="empty">
+                <div><span class="fas fa-image"></span></div>
+                <div>This is your feed. It will show posts from sites you follow.</div>
+              </div>
+            ` : ''}
+        </div>
       </div>
+      ${this.expandedPost ? html`
+        <div class="expanded-post">
+          <div class="expanded-post-inner">
+            <expanded-post
+              .post=${this.expandedPost}
+              .user=${this.user}
+              @close=${this.onClosePost}
+              @add-reaction=${this.onAddReaction}
+              @delete-reaction=${this.onDeleteReaction}
+              @submit-comment=${this.onSubmitComment}
+              @delete-comment=${this.onDeleteComment}
+            ></expanded-post>
+          </div>
+        </div>
+      ` : ''}
     `
-  }
-
-  renderCurrentView () {
-    switch (this.route) {
-      case 'home':
-        return html`<app-view-home .user=${this.user}></app-view-home>`
-      case 'bookmarks':
-        return html`<app-view-bookmarks .user=${this.user}></app-view-bookmarks>`
-      case 'discover':
-        return html`<app-view-discover .user=${this.user}></app-view-discover>`
-      case 'profile':
-        return html`<app-view-profile .user=${this.user} profile-url="${this.routeParams.profileUrl || ''}"></app-view-profile>`
-      default:
-        return html`<app-view-not-found .user=${this.user}></app-view-not-found>`
-    }
   }
 
   // events
   // =
 
-  async addReaction (e) {
-    try {
-      await reactions.add(e.detail.topic, e.detail.emoji)
-    } catch (e) {
-      console.error('Failed to add reaction', e)
-      toast.create('Something went wrong', 'error')
-    }
+  async onExpandPost (e) {
+    var post = e.detail.post
+    await this.loadPostComments(post)
+    this.expandedPost = post
   }
 
-  async deleteReaction (e) {
+  onClosePost (e) {
+    this.expandedPost = null
+  }
+  
+  async onAddReaction (e) {
+    await reactions.add(e.detail.topic, e.detail.emoji)
+  }
+
+  async onDeleteReaction (e) {
+    await reactions.remove(e.detail.topic, e.detail.emoji)
+  }
+
+  async onSubmitPost (e) {
+    // add the new post
     try {
-      await reactions.delete(e.detail.topic, e.detail.emoji)
+      await posts.add({body: e.detail.body})
     } catch (e) {
-      console.error('Failed to remove reaction', e)
-      toast.create('Something went wrong', 'error')
+      alert('Something went wrong. Please let the Beaker team know! (An error is logged in the console.)')
+      console.error('Failed to add post')
+      console.error(e)
+      return
     }
+
+    // reload the feed to show the new post
+    this.load()
+  }
+
+  async onDeletePost (e) {
+    let post = e.detail.post
+
+    // delete the post
+    try {
+      await posts.remove(post.url)
+    } catch (e) {
+      alert('Something went wrong. Please let the Beaker team know! (An error is logged in the console.)')
+      console.error('Failed to delete post')
+      console.error(e)
+      return
+    }
+    toast.create('Post deleted')
+
+    // remove from the feed
+    this.posts = this.posts.filter(p2 => p2.url !== post.url)
+  }
+
+  async onSubmitComment (e) {
+    // add the new comment
+    try {
+      var {topic, replyTo, body} = e.detail
+      await comments.add(topic, {replyTo, body})
+    } catch (e) {
+      alert('Something went wrong. Please let the Beaker team know! (An error is logged in the console.)')
+      console.error('Failed to add comment')
+      console.error(e)
+      return
+    }
+
+    // reload the post comments
+    await this.loadPostComments(this.expandedPost)
+    this.expandedPost = Object.assign({}, this.expandedPost) // forces a re-render
+  }
+
+  async onDeleteComment (e) {
+    let comment = e.detail.comment
+    
+    // delete the comment
+    try {
+      await posts.remove(comment.url)
+    } catch (e) {
+      alert('Something went wrong. Please let the Beaker team know! (An error is logged in the console.)')
+      console.error('Failed to delete comment')
+      console.error(e)
+      return
+    }
+    toast.create('Comment deleted')
+
+    // reload the post comments
+    await this.loadPostComments(this.expandedPost)
+    this.expandedPost = Object.assign({}, this.expandedPost) // forces a re-render
   }
 }
 AppMain.styles = feedMainCSS
 
 customElements.define('app-main', AppMain)
+
+async function loadCommentReactions (authors, comments) {
+  await Promise.all(comments.map(async (comment) => {
+    comment.reactions = await reactions.tabulate(comment.url, {filters: {authors}})
+    if (comment.replies) await loadCommentReactions(authors, comment.replies)
+  }))
+}
